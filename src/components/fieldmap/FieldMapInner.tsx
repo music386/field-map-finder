@@ -69,9 +69,15 @@ function clusterIcon(cluster: { getAllChildMarkers: () => L.Marker[] }) {
   });
 }
 
-function LabelsPane() {
+function DetailPane() {
   const map = useMap();
   useEffect(() => {
+    if (!map.getPane("detail")) {
+      const pane = map.createPane("detail");
+      pane.style.zIndex = "450";
+      pane.style.pointerEvents = "none";
+      pane.style.mixBlendMode = "multiply";
+    }
     if (!map.getPane("labels")) {
       const pane = map.createPane("labels");
       pane.style.zIndex = "650";
@@ -178,12 +184,17 @@ export function FieldMapInner({
       style={{ background: "hsl(205 60% 88%)" }}
       scrollWheelZoom
     >
-      <LabelsPane />
+      <DetailPane />
+      <TileLayer
+        pane="detail"
+        attribution='&copy; OpenStreetMap &copy; CARTO'
+        url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
+      />
       <TileLayer
         pane="labels"
-        attribution='&copy; OpenStreetMap &copy; CARTO'
         url="https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png"
       />
+
 
 
       {countries && (
