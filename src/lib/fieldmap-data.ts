@@ -78,7 +78,7 @@ export interface Project {
   description: string;
   beneficiaries: BeneficiaryRange;
   needs: {
-    funding?: { amount: number; currency: "USD" | "EUR" };
+    funding?: { amount: number; currency: "USD" | "EUR"; raised?: number };
     equipment?: string;
     expertise?: Expertise[];
     training?: string;
@@ -87,6 +87,7 @@ export interface Project {
   status: ProjectStatus;
   photos?: string[];
 }
+
 
 export const organizations: Organization[] = [
   {
