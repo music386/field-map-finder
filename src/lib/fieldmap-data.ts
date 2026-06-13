@@ -47,6 +47,8 @@ export type ProjectStatus =
 
 export type ProjectType = "time-bound" | "ongoing";
 
+export type EntityKind = "RLO" | "NGO";
+
 export interface Organization {
   id: string;
   name: string;
@@ -59,7 +61,9 @@ export interface Organization {
   yearFounded?: number;
   orgType: OrgType;
   brings: OrgStrength[];
+  entityKind?: EntityKind; // defaults to "RLO"
 }
+
 
 export interface Project {
   id: string;
