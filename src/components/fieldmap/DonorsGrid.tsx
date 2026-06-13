@@ -190,20 +190,6 @@ export function DonorsGrid() {
             </PopoverContent>
           </Popover>
 
-          <Select value={ticket} onValueChange={(v) => setTicket(v as TicketBucket)}>
-            <SelectTrigger className="h-8 w-[170px] text-xs">
-              <span className="mr-1 text-muted-foreground">Ticket:</span>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="z-[2000]">
-              {ticketBuckets.map((b) => (
-                <SelectItem key={b.id} value={b.id}>
-                  {b.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
           {hasActive && (
             <Button variant="ghost" size="sm" className="h-8 text-xs" onClick={clearAll}>
               <X className="mr-1 h-3 w-3" /> Clear
