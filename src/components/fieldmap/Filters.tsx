@@ -62,7 +62,7 @@ export function Filters({
         <SelectTrigger className="h-8 w-[150px] text-xs">
           <SelectValue placeholder="Category" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="z-[2000]">
           <SelectItem value="all">All categories</SelectItem>
           {categories.map((c) => (
             <SelectItem key={c} value={c} className="capitalize">
@@ -70,6 +70,7 @@ export function Filters({
             </SelectItem>
           ))}
         </SelectContent>
+
       </Select>
 
       <Popover>
