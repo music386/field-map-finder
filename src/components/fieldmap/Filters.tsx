@@ -27,6 +27,7 @@ export interface FilterState {
   needs: NeedFilter[];
   type: "time-bound" | "ongoing" | "both";
   country: string | "all";
+  entityKind: "RLO" | "NGO" | "all";
 }
 
 export const defaultFilters: FilterState = {
@@ -34,6 +35,7 @@ export const defaultFilters: FilterState = {
   needs: [],
   type: "both",
   country: "all",
+  entityKind: "all",
 };
 
 export function Filters({
@@ -49,7 +51,8 @@ export function Filters({
     value.category !== "all" ||
     value.needs.length > 0 ||
     value.type !== "both" ||
-    value.country !== "all";
+    value.country !== "all" ||
+    value.entityKind !== "all";
 
   return (
     <div className="flex flex-wrap items-center gap-2 border-b bg-card/80 p-3 backdrop-blur">
@@ -124,6 +127,23 @@ export function Filters({
           <SelectItem value="both">Both</SelectItem>
           <SelectItem value="time-bound">Project</SelectItem>
           <SelectItem value="ongoing">Mission</SelectItem>
+        </SelectContent>
+      </Select>
+
+      <Select
+        value={value.entityKind}
+        onValueChange={(v) =>
+          onChange({ ...value, entityKind: v as FilterState["entityKind"] })
+        }
+      >
+        <SelectTrigger className="h-8 w-[150px] text-xs">
+          <span className="text-muted-foreground mr-1">Org:</span>
+          <SelectValue placeholder="All" />
+        </SelectTrigger>
+        <SelectContent className="z-[2000]">
+          <SelectItem value="all">All (RLO & NGO)</SelectItem>
+          <SelectItem value="RLO">RLO only</SelectItem>
+          <SelectItem value="NGO">NGO only</SelectItem>
         </SelectContent>
       </Select>
 
