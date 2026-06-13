@@ -1,12 +1,14 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { orgById, type Project } from "@/lib/fieldmap-data";
+import { Progress } from "@/components/ui/progress";
+import { orgById, orgKind, type Project } from "@/lib/fieldmap-data";
 import { categoryPhotos, orgColor, orgInitials } from "@/lib/category-photos";
 import { deriveSubmission } from "@/lib/submissions";
 import { SidePanel } from "./SidePanel";
 import type { Role } from "./RoleSwitcher";
 import { MessageSquare } from "lucide-react";
+
 
 function buildSmsLink(phone: string, body: string) {
   const cleaned = phone.replace(/\s+/g, "");
