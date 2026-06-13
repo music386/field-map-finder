@@ -274,7 +274,7 @@ function OrgAccountEditor({
     });
     setContactEmail(profileRow?.contact_email ?? email);
     setContactPhone(profileRow?.contact_phone ?? "");
-    setProjects(projRows ?? []);
+    setProjects((projRows as unknown as UserProjectRow[]) ?? []);
     setLoading(false);
   }
   useEffect(() => { reload(); }, [userId]);
