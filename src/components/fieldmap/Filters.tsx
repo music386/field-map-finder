@@ -131,9 +131,9 @@ export function Filters({
       </Select>
 
       <Select
-        value={value.entityKind}
+        value={value.entityKind || "all"}
         onValueChange={(v) =>
-          onChange({ ...value, entityKind: v as FilterState["entityKind"] })
+          onChange({ ...value, entityKind: (v || "all") as FilterState["entityKind"] })
         }
       >
         <SelectTrigger className="h-8 w-[150px] text-xs">
