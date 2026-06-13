@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import type { AppRole } from "@/lib/use-auth";
+import { DEMO_ACCOUNTS, ensureDemoAccount, type DemoRole } from "@/lib/demo-auth.functions";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
