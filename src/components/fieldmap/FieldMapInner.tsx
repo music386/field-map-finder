@@ -124,7 +124,7 @@ export function FieldMapInner({
 }: {
   projects: Project[];
   onSelect: (p: Project, perspectiveOrgId?: string) => void;
-  focused: Project | null;
+  focused: { project: Project; perspectiveOrgId?: string | null } | null;
 }) {
   const center = useMemo<[number, number]>(() => [10, 25], []);
 
