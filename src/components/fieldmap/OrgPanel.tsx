@@ -32,9 +32,20 @@ export function OrgPanel({
             {orgInitials(org.name)}
           </div>
           <div className="min-w-0">
-            <Badge variant="outline" className="capitalize">
-              {org.orgType}
-            </Badge>
+            <div className="flex flex-wrap items-center gap-1.5">
+              <Badge
+                className={
+                  orgKind(org) === "NGO"
+                    ? "bg-[hsl(212_85%_48%)] text-white hover:bg-[hsl(212_85%_44%)]"
+                    : "bg-[hsl(152_65%_36%)] text-white hover:bg-[hsl(152_65%_32%)]"
+                }
+              >
+                {orgKind(org)}
+              </Badge>
+              <Badge variant="outline" className="capitalize">
+                {org.orgType}
+              </Badge>
+            </div>
             <h2 className="mt-1 text-xl font-semibold leading-snug">
               {org.name}
             </h2>
@@ -51,7 +62,7 @@ export function OrgPanel({
 
         <section className="space-y-2">
           <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            What this RLO brings
+            What this organisation brings
           </h4>
           <div className="flex flex-wrap gap-1.5">
             {org.brings.map((b) => (
@@ -61,6 +72,7 @@ export function OrgPanel({
             ))}
           </div>
         </section>
+
 
         <Separator />
 
