@@ -175,7 +175,7 @@ export function FieldMapInner({
                 key={`${p.id}-partner-${po.id}`}
                 position={[p.lat + dlat, p.lng + dlng]}
                 icon={icons[`${pKind}-partner` as const]}
-                eventHandlers={{ click: () => onSelect(p) }}
+                eventHandlers={{ click: () => onSelect(p, po.id) }}
               >
                 <Popup>
                   <div style={{ fontSize: 12 }}>
