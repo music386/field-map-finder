@@ -163,6 +163,7 @@ export function FieldMapInner({
       minZoom={2}
       worldCopyJump
       className="h-full w-full"
+      style={{ background: "hsl(205 60% 88%)" }}
       scrollWheelZoom
     >
       <TileLayer
