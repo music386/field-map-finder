@@ -167,8 +167,9 @@ export function FieldMapInner({
     >
       <TileLayer
         attribution='&copy; OpenStreetMap &copy; CARTO'
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+        url="https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png"
       />
+
       {countries && (
         <GeoJSON
           key={Object.entries(countryCounts)
