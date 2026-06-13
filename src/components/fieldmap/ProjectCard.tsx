@@ -191,7 +191,7 @@ export function ProjectCard({
           {project.partnerOrgIds && project.partnerOrgIds.length > 0 && (
             <section className="space-y-2 rounded-md border border-[hsl(212_85%_48%)]/30 bg-[hsl(212_85%_48%)]/5 p-3">
               <h4 className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-                Delivered in partnership with
+                Collaborating with
               </h4>
               <div className="flex flex-col gap-2">
                 {project.partnerOrgIds.map((pid) => {
