@@ -9,7 +9,7 @@ import {
 import { ProjectCard } from "@/components/fieldmap/ProjectCard";
 import { OrgPanel } from "@/components/fieldmap/OrgPanel";
 import { RoleSwitcher, type Role } from "@/components/fieldmap/RoleSwitcher";
-import { projects as allProjects, type Project } from "@/lib/fieldmap-data";
+import { projects as allProjects, type Project, orgById, orgKind } from "@/lib/fieldmap-data";
 import logo from "@/assets/fieldmap-logo.png";
 
 export const Route = createFileRoute("/")({
@@ -45,6 +45,10 @@ function HomePage() {
       if (filters.category !== "all" && p.category !== filters.category)
         return false;
       if (filters.type !== "both" && p.type !== filters.type) return false;
+      if (filters.entityKind !== "all") {
+        const org = orgById(p.orgId);
+        if (!org || orgKind(org) !== filters.entityKind) return false;
+      }
       if (filters.country !== "all") {
         // crude country match via locationLabel suffix
         if (!p.locationLabel.endsWith(filters.country)) return false;
