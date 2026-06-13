@@ -35,32 +35,6 @@ const donorTypes: DonorType[] = [
   "Individual",
 ];
 
-const ticketBuckets = [
-  { id: "all", label: "Any ticket size" },
-  { id: "small", label: "Up to $250k" },
-  { id: "mid", label: "$250k – $2M" },
-  { id: "large", label: "$2M+" },
-] as const;
-
-type TicketBucket = (typeof ticketBuckets)[number]["id"];
-
-// Parse the upper bound (USD/EUR roughly equivalent) from a ticket-size string.
-function ticketUpperBound(s: string): number {
-  const nums = Array.from(s.matchAll(/([\d.]+)\s*([kKmM])/g)).map((m) => {
-    const n = parseFloat(m[1]);
-    return m[2].toLowerCase() === "m" ? n * 1_000_000 : n * 1_000;
-  });
-  return nums.length ? Math.max(...nums) : 0;
-}
-
-function matchesTicket(s: string, bucket: TicketBucket) {
-  if (bucket === "all") return true;
-  const upper = ticketUpperBound(s);
-  if (bucket === "small") return upper <= 250_000;
-  if (bucket === "mid") return upper > 250_000 && upper <= 2_000_000;
-  return upper > 2_000_000;
-}
-
 export function DonorsGrid() {
   const allRegions = useMemo(
     () => Array.from(new Set(donors.flatMap((d) => d.regions))).sort(),
@@ -71,7 +45,6 @@ export function DonorsGrid() {
   const [type, setType] = useState<DonorType | "all">("all");
   const [interests, setInterests] = useState<Category[]>([]);
   const [regions, setRegions] = useState<string[]>([]);
-  const [ticket, setTicket] = useState<TicketBucket>("all");
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -86,20 +59,18 @@ export function DonorsGrid() {
         )
       )
         return false;
-      if (!matchesTicket(d.ticketSize, ticket)) return false;
       if (q) {
         const hay = `${d.name} ${d.about} ${d.location}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
     });
-  }, [query, type, interests, regions, ticket]);
+  }, [query, type, interests, regions]);
 
   const hasActive =
     type !== "all" ||
     interests.length > 0 ||
     regions.length > 0 ||
-    ticket !== "all" ||
     query.trim() !== "";
 
   function clearAll() {
@@ -107,7 +78,6 @@ export function DonorsGrid() {
     setType("all");
     setInterests([]);
     setRegions([]);
-    setTicket("all");
   }
 
   return (
@@ -117,7 +87,7 @@ export function DonorsGrid() {
           <h2 className="text-xl font-semibold">Top donors</h2>
           <p className="text-sm text-muted-foreground">
             A curated list of funders actively supporting refugee-led and humanitarian
-            initiatives. Filter by interest, region or ticket size to find the right fit.
+            initiatives. Filter by interest or region to find the right fit.
           </p>
         </div>
 
@@ -219,20 +189,6 @@ export function DonorsGrid() {
               </div>
             </PopoverContent>
           </Popover>
-
-          <Select value={ticket} onValueChange={(v) => setTicket(v as TicketBucket)}>
-            <SelectTrigger className="h-8 w-[170px] text-xs">
-              <span className="mr-1 text-muted-foreground">Ticket:</span>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="z-[2000]">
-              {ticketBuckets.map((b) => (
-                <SelectItem key={b.id} value={b.id}>
-                  {b.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
 
           {hasActive && (
             <Button variant="ghost" size="sm" className="h-8 text-xs" onClick={clearAll}>
