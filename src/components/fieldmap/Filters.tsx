@@ -119,12 +119,13 @@ export function Filters({
         <SelectTrigger className="h-8 w-[140px] text-xs">
           <SelectValue />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="z-[2000]">
           <SelectItem value="both">Any project type</SelectItem>
           <SelectItem value="time-bound">Time-bound</SelectItem>
           <SelectItem value="ongoing">Ongoing mission</SelectItem>
         </SelectContent>
       </Select>
+
 
       <Select
         value={value.country}
