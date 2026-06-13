@@ -225,3 +225,36 @@ export const donors: Donor[] = [
     recentlyFunded: 5,
   }
 ];
+
+export type Donation = {
+  id: string;
+  donorId: string;
+  projectId: string;
+  amount: number;
+  currency: "EUR" | "USD" | "GBP";
+  date: string; // ISO
+  note?: string;
+};
+
+// Illustrative recent donations from donors to specific NGO/RLO projects.
+export const donations: Donation[] = [
+  { id: "don-ikea-kakuma", donorId: "d-ikea", projectId: "p-efr-2025-kakuma", amount: 45000, currency: "EUR", date: "2025-07-12", note: "Co-funded solar array and battery storage" },
+  { id: "don-bmz-hatay", donorId: "d-bmz", projectId: "p-efr-2024-hatay", amount: 80000, currency: "EUR", date: "2024-11-04", note: "Earthquake recovery energy infrastructure" },
+  { id: "don-echo-tripoli", donorId: "d-echo", projectId: "p-efr-2023-tripoli", amount: 120000, currency: "EUR", date: "2023-09-21" },
+  { id: "don-hilton-katsikas", donorId: "d-conrad-hilton", projectId: "p-efr-2022-katsikas", amount: 30000, currency: "USD", date: "2022-08-15", note: "Habibi.Works maker space energy upgrade" },
+  { id: "don-google-singa", donorId: "d-google-org", projectId: "p-singa-incubator", amount: 95000, currency: "USD", date: "2025-03-02", note: "Refugee-led startup incubator cohort" },
+  { id: "don-mastercard-migrateful", donorId: "d-mastercard", projectId: "p-migrateful-chefs", amount: 60000, currency: "GBP", date: "2025-01-18" },
+  { id: "don-mackenzie-rwit", donorId: "d-mackenzie", projectId: "p-rwit-hosting", amount: 250000, currency: "USD", date: "2024-12-10", note: "Unrestricted multi-year support" },
+  { id: "don-ford-wfrw", donorId: "d-ford-foundation", projectId: "p-wfrw-london", amount: 85000, currency: "USD", date: "2025-02-22" },
+  { id: "don-unhcr-rti", donorId: "d-unhcr-innovation", projectId: "p-rti-athens", amount: 75000, currency: "EUR", date: "2025-05-08", note: "Trauma-informed care training" },
+  { id: "don-shell-calabar", donorId: "d-shell", projectId: "p-efr-2020-calabar", amount: 40000, currency: "USD", date: "2020-10-30" },
+  { id: "don-alwaleed-mosaik", donorId: "d-alwaleed", projectId: "p-mosaik-lesvos", amount: 110000, currency: "USD", date: "2025-04-14", note: "Community centre operations" },
+  { id: "don-patel-gsbtb", donorId: "d-hpatel", projectId: "p-gsbtb-berlin", amount: 20000, currency: "GBP", date: "2024-09-09", note: "Community kitchen nutrition programme" },
+  { id: "don-schwab-svn", donorId: "d-dr-schwab", projectId: "p-svn-amsterdam", amount: 35000, currency: "EUR", date: "2025-06-01" },
+  { id: "don-cisco-moria-2020", donorId: "d-cisco-foundation", projectId: "p-efr-2020-moria", amount: 50000, currency: "USD", date: "2020-07-19" },
+  { id: "don-usaid-guadalajara", donorId: "d-usaid", projectId: "p-efr-2021-guadalajara", amount: 200000, currency: "USD", date: "2021-11-12" },
+];
+
+export function donorById(id: string) {
+  return donors.find((d) => d.id === id);
+}
