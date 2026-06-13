@@ -9,8 +9,6 @@ import { SidePanel } from "./SidePanel";
 import { InAppMessageButton, logSmsOutreach } from "./InAppMessageButton";
 import type { Role } from "./RoleSwitcher";
 import { MessageSquare } from "lucide-react";
-import { useAuth } from "@/lib/use-auth";
-import { supabase } from "@/integrations/supabase/client";
 
 
 function buildSmsLink(phone: string, body: string) {
