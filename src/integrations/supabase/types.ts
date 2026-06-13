@@ -148,6 +148,80 @@ export type Database = {
         }
         Relationships: []
       }
+      sms_submissions: {
+        Row: {
+          beneficiaries: string | null
+          category: string
+          claimed_at: string | null
+          claimed_by_user_id: string | null
+          claimed_project_id: string | null
+          contact_phone: string | null
+          created_at: string
+          description: string | null
+          id: string
+          lat: number
+          lng: number
+          location_label: string
+          needs: Json
+          project_type: string
+          submitted_at: string
+          suggested_seed_org_id: string | null
+          target_date: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          beneficiaries?: string | null
+          category: string
+          claimed_at?: string | null
+          claimed_by_user_id?: string | null
+          claimed_project_id?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          lat: number
+          lng: number
+          location_label: string
+          needs?: Json
+          project_type?: string
+          submitted_at?: string
+          suggested_seed_org_id?: string | null
+          target_date?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          beneficiaries?: string | null
+          category?: string
+          claimed_at?: string | null
+          claimed_by_user_id?: string | null
+          claimed_project_id?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          lat?: number
+          lng?: number
+          location_label?: string
+          needs?: Json
+          project_type?: string
+          submitted_at?: string
+          suggested_seed_org_id?: string | null
+          target_date?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sms_submissions_claimed_project_id_fkey"
+            columns: ["claimed_project_id"]
+            isOneToOne: false
+            referencedRelation: "user_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       threads: {
         Row: {
           created_at: string
