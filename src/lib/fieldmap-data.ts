@@ -750,7 +750,6 @@ export const needsOptions = [
   "funding",
   "expertise",
   "equipment",
-  "partnership",
 ] as const;
 export type NeedFilter = (typeof needsOptions)[number];
 
