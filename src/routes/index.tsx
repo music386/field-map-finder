@@ -162,6 +162,18 @@ function HomePage() {
           </div>
         </>
       )}
+      <PartnershipsPanel
+        open={partnershipsOpen}
+        onOpenChange={setPartnershipsOpen}
+        onProjectClick={(p, persp) => {
+          setPartnershipsOpen(false);
+          openProject(p, persp);
+        }}
+        onOrgClick={(id) => {
+          setPartnershipsOpen(false);
+          openOrg(id);
+        }}
+      />
     </div>
   );
 }
