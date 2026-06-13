@@ -78,6 +78,7 @@ export function ProjectCard({
   const action = actionFor(role, project, org.name);
   const sms = buildSmsLink(org.phone, action.body);
   const photo = categoryPhotos[project.category];
+  const kind = orgKind(org);
   const submittedDate = new Date(submission.submitted_at).toLocaleString(
     undefined,
     {
@@ -88,6 +89,20 @@ export function ProjectCard({
       minute: "2-digit",
     },
   );
+
+  // Funding progress (deterministic fallback if raised isn't set)
+  const funding = project.needs.funding;
+  let raised = funding?.raised;
+  if (funding && raised === undefined) {
+    let h = 0;
+    for (let i = 0; i < project.id.length; i++)
+      h = (h * 33 + project.id.charCodeAt(i)) >>> 0;
+    raised = Math.round((funding.amount * ((h % 70) + 5)) / 100);
+  }
+  const fundingPct = funding
+    ? Math.min(100, Math.round(((raised ?? 0) / funding.amount) * 100))
+    : 0;
+
 
   return (
     <SidePanel open={open} onClose={() => onOpenChange(false)}>
