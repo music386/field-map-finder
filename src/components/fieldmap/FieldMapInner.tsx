@@ -69,6 +69,18 @@ function clusterIcon(cluster: { getAllChildMarkers: () => L.Marker[] }) {
   });
 }
 
+function LabelsPane() {
+  const map = useMap();
+  useEffect(() => {
+    if (!map.getPane("labels")) {
+      const pane = map.createPane("labels");
+      pane.style.zIndex = "650";
+      pane.style.pointerEvents = "none";
+    }
+  }, [map]);
+  return null;
+}
+
 function FlyTo({ project }: { project: Project | null }) {
   const map = useMap();
   useEffect(() => {
