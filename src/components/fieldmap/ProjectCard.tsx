@@ -20,7 +20,7 @@ function actionFor(role: Role, project: Project, orgName: string) {
     "\n\n— Sent via FieldMap. Reply to this number with your contact details.";
   if (role === "ngo") {
     return {
-      label: "Propose partnership",
+      label: "Start conversation",
       body: `Hi ${orgName}, I'm reaching out from an NGO about your initiative "${project.title}". We'd like to explore a partnership.${senderLine}`,
     };
   }
@@ -163,10 +163,21 @@ export function ProjectCard({
           </div>
         </div>
 
-        <div className="px-4 pb-2 pt-4">
-          <h2 className="text-xl font-semibold leading-snug">
-            {submission.title}
-          </h2>
+        <div className="flex flex-col gap-1.5 px-4 pb-2 pt-4 border-b bg-muted/20">
+          <div className="flex items-start justify-between gap-3">
+            <h2 className="text-lg font-semibold leading-snug flex-1">
+              {submission.title}
+            </h2>
+            <Button asChild size="sm" className="shrink-0 self-center">
+              <a href={sms}>
+                <MessageSquare className="mr-1.5 h-3.5 w-3.5" />
+                {action.label}
+              </a>
+            </Button>
+          </div>
+          <p className="text-[11px] text-muted-foreground">
+            Opens your SMS app. The RLO will reply to your number directly.
+          </p>
         </div>
 
 
@@ -325,19 +336,6 @@ export function ProjectCard({
             </div>
           </div>
 
-          <Separator />
-
-          <div className="space-y-2">
-            <Button asChild className="w-full" size="lg">
-              <a href={sms}>
-                <MessageSquare className="mr-2 h-4 w-4" />
-                {action.label}
-              </a>
-            </Button>
-            <p className="text-center text-[11px] text-muted-foreground">
-              Opens your SMS app. The RLO will reply to your number directly.
-            </p>
-          </div>
         </div>
       </div>
     </SidePanel>
