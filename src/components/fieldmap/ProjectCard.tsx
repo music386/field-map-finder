@@ -204,17 +204,21 @@ export function ProjectCard({
             </p>
           </Field>
 
-          <Field label="About the organisation">
-            <p className="whitespace-pre-line">{submission.description_org}</p>
+          <Field label={isPartnerView ? `About ${org.name}` : "About the organisation"}>
+            <p className="whitespace-pre-line">
+              {isPartnerView
+                ? org.description ?? `${org.name} is collaborating on this initiative.`
+                : submission.description_org}
+            </p>
           </Field>
 
-          {project.partnerOrgIds && project.partnerOrgIds.length > 0 && (
+          {collaboratorIds.length > 0 && (
             <section className="space-y-2 rounded-md border border-[hsl(212_85%_48%)]/30 bg-[hsl(212_85%_48%)]/5 p-3">
               <h4 className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
                 Collaborating with
               </h4>
               <div className="flex flex-col gap-2">
-                {project.partnerOrgIds.map((pid) => {
+                {collaboratorIds.map((pid) => {
                   const po = orgById(pid);
                   if (!po) return null;
                   const pKind = orgKind(po);
