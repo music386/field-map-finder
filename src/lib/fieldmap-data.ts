@@ -1151,6 +1151,7 @@ export const projects: Project[] = [
       training: "Teacher training for 24 volunteer instructors",
     },
     status: "seeking support",
+    partnerOrgIds: ["org-6"],
   },
 ];
 
