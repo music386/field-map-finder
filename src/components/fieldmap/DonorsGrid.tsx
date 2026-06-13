@@ -35,6 +35,12 @@ const donorTypes: DonorType[] = [
   "Individual",
 ];
 
+export function DonorsGrid() {
+  const allRegions = useMemo(
+    () => Array.from(new Set(donors.flatMap((d) => d.regions))).sort(),
+    [],
+  );
+
   const [query, setQuery] = useState("");
   const [type, setType] = useState<DonorType | "all">("all");
   const [interests, setInterests] = useState<Category[]>([]);
@@ -81,7 +87,7 @@ const donorTypes: DonorType[] = [
           <h2 className="text-xl font-semibold">Top donors</h2>
           <p className="text-sm text-muted-foreground">
             A curated list of funders actively supporting refugee-led and humanitarian
-            initiatives. Filter by interest, region or ticket size to find the right fit.
+            initiatives. Filter by interest or region to find the right fit.
           </p>
         </div>
 
