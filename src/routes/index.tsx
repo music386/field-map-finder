@@ -38,6 +38,7 @@ function HomePage() {
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
   const [selected, setSelected] = useState<Project | null>(null);
   const [projectOpen, setProjectOpen] = useState(false);
+  const [perspectiveOrgId, setPerspectiveOrgId] = useState<string | null>(null);
   const [orgId, setOrgId] = useState<string | null>(null);
   const [orgOpen, setOrgOpen] = useState(false);
 
@@ -67,8 +68,9 @@ function HomePage() {
     });
   }, [filters]);
 
-  function openProject(p: Project) {
+  function openProject(p: Project, perspective?: string) {
     setSelected(p);
+    setPerspectiveOrgId(perspective ?? null);
     setProjectOpen(true);
     setOrgOpen(false);
   }
@@ -132,6 +134,7 @@ function HomePage() {
             />
             <ProjectCard
               project={selected}
+              perspectiveOrgId={perspectiveOrgId}
               open={projectOpen}
               onOpenChange={setProjectOpen}
               role={role}

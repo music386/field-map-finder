@@ -7,7 +7,7 @@ const InnerMap = lazy(() =>
 
 export function FieldMap(props: {
   projects: Project[];
-  onSelect: (p: Project) => void;
+  onSelect: (p: Project, perspectiveOrgId?: string) => void;
   focused: Project | null;
 }) {
   if (typeof window === "undefined") {

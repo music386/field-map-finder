@@ -53,20 +53,35 @@ function Field({
 
 export function ProjectCard({
   project,
+  perspectiveOrgId,
   open,
   onOpenChange,
   role,
   onOrgClick,
 }: {
   project: Project | null;
+  perspectiveOrgId?: string | null;
   open: boolean;
   onOpenChange: (o: boolean) => void;
   role: Role;
   onOrgClick: (orgId: string) => void;
 }) {
   if (!project) return null;
-  const org = orgById(project.orgId);
-  if (!org) return null;
+  const leadOrg = orgById(project.orgId);
+  if (!leadOrg) return null;
+  const perspectiveOrg =
+    (perspectiveOrgId && orgById(perspectiveOrgId)) || null;
+  const isPartnerView = !!perspectiveOrg && perspectiveOrg.id !== leadOrg.id;
+  const org = perspectiveOrg ?? leadOrg;
+
+  // Build "collaborating with" list from the active perspective:
+  // include all partner orgs + lead org, minus the org being viewed.
+  const collaboratorIds = Array.from(
+    new Set<string>([
+      project.orgId,
+      ...(project.partnerOrgIds ?? []),
+    ]),
+  ).filter((id) => id !== org.id);
 
   const submission = deriveSubmission(project)!;
   const action = actionFor(role, project, org.name);
@@ -172,6 +187,11 @@ export function ProjectCard({
           <p className="text-[11px] text-muted-foreground">
             Opens your SMS app. The RLO will reply to your number directly.
           </p>
+          {isPartnerView && (
+            <p className="mt-1 text-[11px] font-medium text-[hsl(212_85%_48%)]">
+              You're viewing {org.name}'s role in this initiative.
+            </p>
+          )}
         </div>
 
 
@@ -184,17 +204,21 @@ export function ProjectCard({
             </p>
           </Field>
 
-          <Field label="About the organisation">
-            <p className="whitespace-pre-line">{submission.description_org}</p>
+          <Field label={isPartnerView ? `About ${org.name}` : "About the organisation"}>
+            <p className="whitespace-pre-line">
+              {isPartnerView
+                ? org.description ?? `${org.name} is collaborating on this initiative.`
+                : submission.description_org}
+            </p>
           </Field>
 
-          {project.partnerOrgIds && project.partnerOrgIds.length > 0 && (
+          {collaboratorIds.length > 0 && (
             <section className="space-y-2 rounded-md border border-[hsl(212_85%_48%)]/30 bg-[hsl(212_85%_48%)]/5 p-3">
               <h4 className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
                 Collaborating with
               </h4>
               <div className="flex flex-col gap-2">
-                {project.partnerOrgIds.map((pid) => {
+                {collaboratorIds.map((pid) => {
                   const po = orgById(pid);
                   if (!po) return null;
                   const pKind = orgKind(po);
