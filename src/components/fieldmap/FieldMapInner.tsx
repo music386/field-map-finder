@@ -230,7 +230,7 @@ export function FieldMapInner({
           );
         });
       })}
-      <FlyTo project={focused} />
+      <FlyTo focused={focused} />
     </MapContainer>
   );
 }
