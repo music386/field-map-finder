@@ -282,7 +282,7 @@ export function ProjectCard({
                 !project.needs.training &&
                 !project.needs.partnership && (
                   <span className="text-xs text-muted-foreground">
-                    No additional needs listed.
+                    No additional resource requirements listed.
                   </span>
                 )}
             </div>
