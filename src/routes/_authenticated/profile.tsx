@@ -497,6 +497,3 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     </div>
   );
 }
-
-// keep import happy
-void redirect;
