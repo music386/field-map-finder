@@ -402,7 +402,7 @@ function OrgOverview({
       {/* Hero org card */}
       {org ? (
         <Card className="relative overflow-hidden">
-          <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent" />
           <div className="relative flex flex-col gap-4 p-5 sm:flex-row sm:items-start">
             <div
               className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl text-lg font-semibold text-white shadow-md"
