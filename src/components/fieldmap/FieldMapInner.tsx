@@ -145,7 +145,7 @@ export function FieldMapInner({
             .map((id) => orgById(id))
             .filter((o): o is NonNullable<typeof o> => !!o);
           const partnerLabel = partnerOrgs.length
-            ? ` · with ${partnerOrgs.map((o) => o.name).join(", ")}`
+            ? ` · collaborating with ${partnerOrgs.map((o) => o.name).join(", ")}`
             : "";
 
           const main = (
@@ -181,7 +181,7 @@ export function FieldMapInner({
                   <div style={{ fontSize: 12 }}>
                     <strong>{po.name}</strong>
                     <div style={{ color: "#666", fontSize: 11 }}>
-                      {pKind} · partner on "{p.title}"
+                      {pKind} · collaborating with {org?.name} on "{p.title}"
                     </div>
                   </div>
                 </Popup>
@@ -192,6 +192,29 @@ export function FieldMapInner({
           return [main, ...partnerPins];
         })}
       </MarkerClusterGroup>
+      {projects.flatMap((p) => {
+        const partnerOrgs = (p.partnerOrgIds ?? [])
+          .map((id) => orgById(id))
+          .filter((o): o is NonNullable<typeof o> => !!o);
+        return partnerOrgs.map((po, i) => {
+          const [dlat, dlng] = offsetFor(p.id + po.id, i);
+          return (
+            <Polyline
+              key={`link-${p.id}-${po.id}`}
+              positions={[
+                [p.lat, p.lng],
+                [p.lat + dlat, p.lng + dlng],
+              ]}
+              pathOptions={{
+                color: "hsl(212 85% 48%)",
+                weight: 2,
+                opacity: 0.7,
+                dashArray: "4 4",
+              }}
+            />
+          );
+        });
+      })}
       <FlyTo project={focused} />
     </MapContainer>
   );
