@@ -211,7 +211,8 @@ function OrgAccountEditor({
   role: "rlo" | "ngo";
 }) {
   const [org, setOrg] = useState<UserOrg | null>(null);
-  const [projects, setProjects] = useState<{ id: string; title: string; category: string; location_label: string }[]>([]);
+  const [projects, setProjects] = useState<UserProjectRow[]>([]);
+  const [active, setActive] = useState<Project | null>(null);
   const [contactEmail, setContactEmail] = useState(email);
   const [contactPhone, setContactPhone] = useState("");
   const [loading, setLoading] = useState(true);
