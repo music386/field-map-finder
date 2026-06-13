@@ -180,6 +180,7 @@ export function FieldMapInner({
             <Marker
               key={p.id}
               position={[p.lat, p.lng]}
+              keyboard={false}
               icon={getPinIcon(kind, { selected: mainSelected })}
               zIndexOffset={mainSelected ? 1000 : 0}
               eventHandlers={{ click: () => onSelect(p) }}
@@ -205,6 +206,7 @@ export function FieldMapInner({
               <Marker
                 key={`${p.id}-partner-${po.id}`}
                 position={[p.lat + dlat, p.lng + dlng]}
+                keyboard={false}
                 icon={getPinIcon(pKind, {
                   partner: true,
                   selected: partnerSelected,
