@@ -183,6 +183,52 @@ export function ProjectCard({
             <p className="whitespace-pre-line">{submission.description_org}</p>
           </Field>
 
+          {project.partnerOrgIds && project.partnerOrgIds.length > 0 && (
+            <section className="space-y-2 rounded-md border border-[hsl(212_85%_48%)]/30 bg-[hsl(212_85%_48%)]/5 p-3">
+              <h4 className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                Delivered in partnership with
+              </h4>
+              <div className="flex flex-col gap-2">
+                {project.partnerOrgIds.map((pid) => {
+                  const po = orgById(pid);
+                  if (!po) return null;
+                  const pKind = orgKind(po);
+                  return (
+                    <button
+                      key={pid}
+                      onClick={() => onOrgClick(pid)}
+                      className="flex items-center gap-2 text-left"
+                    >
+                      <span
+                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold text-white"
+                        style={{ backgroundColor: orgColor(po.id) }}
+                      >
+                        {orgInitials(po.name)}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-sm font-medium text-primary underline-offset-2 hover:underline">
+                          {po.name}
+                        </span>
+                        <span className="block truncate text-[11px] text-muted-foreground">
+                          {po.region}, {po.country}
+                        </span>
+                      </span>
+                      <Badge
+                        className={
+                          pKind === "NGO"
+                            ? "bg-[hsl(212_85%_48%)] text-white hover:bg-[hsl(212_85%_44%)]"
+                            : "bg-[hsl(152_65%_36%)] text-white hover:bg-[hsl(152_65%_32%)]"
+                        }
+                      >
+                        {pKind}
+                      </Badge>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
           <Separator />
 
           {funding && (
