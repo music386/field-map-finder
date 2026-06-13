@@ -8,7 +8,7 @@ const InnerMap = lazy(() =>
 export function FieldMap(props: {
   projects: Project[];
   onSelect: (p: Project, perspectiveOrgId?: string) => void;
-  focused: Project | null;
+  focused: { project: Project; perspectiveOrgId?: string | null } | null;
 }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
