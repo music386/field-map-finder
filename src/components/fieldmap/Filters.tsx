@@ -119,7 +119,7 @@ export function Filters({
           onChange({ ...value, type: v as FilterState["type"] })
         }
       >
-        <SelectTrigger className="h-8 w-[150px] text-xs">
+        <SelectTrigger className="h-8 w-fit min-w-[100px] text-xs">
           <span className="text-muted-foreground mr-1">Type:</span>
           <SelectValue placeholder="Both" />
         </SelectTrigger>
@@ -136,14 +136,14 @@ export function Filters({
           onChange({ ...value, entityKind: (v || "all") as FilterState["entityKind"] })
         }
       >
-        <SelectTrigger className="h-8 w-[150px] text-xs">
+        <SelectTrigger className="h-8 w-fit min-w-[100px] text-xs">
           <span className="text-muted-foreground mr-1">Org:</span>
-          <SelectValue placeholder="All" />
+          <SelectValue placeholder="Both" />
         </SelectTrigger>
         <SelectContent className="z-[2000]">
-          <SelectItem value="all">All (RLO & NGO)</SelectItem>
-          <SelectItem value="RLO">RLO only</SelectItem>
-          <SelectItem value="NGO">NGO only</SelectItem>
+          <SelectItem value="all">Both</SelectItem>
+          <SelectItem value="RLO">RLO</SelectItem>
+          <SelectItem value="NGO">NGO</SelectItem>
         </SelectContent>
       </Select>
 
@@ -177,8 +177,20 @@ export function Filters({
         </Button>
       )}
 
-      <div className="ml-auto text-xs text-muted-foreground">
-        {resultCount} {resultCount === 1 ? "project" : "projects"}
+      <div className="ml-auto flex items-center gap-4 text-xs">
+        <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block h-2 w-2 rounded-full bg-[hsl(152_65%_36%)]" />
+            RLO
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block h-2 w-2 rounded-full bg-[hsl(212_85%_48%)]" />
+            NGO
+          </span>
+        </div>
+        <div className="text-muted-foreground border-l border-muted pl-4 h-4 flex items-center">
+          {resultCount} {resultCount === 1 ? "project" : "projects"}
+        </div>
       </div>
     </div>
   );
