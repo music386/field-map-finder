@@ -49,7 +49,7 @@ export function HeaderUserMenu() {
           {initials(label) || <UserRound className="h-4 w-4" />}
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
+      <DropdownMenuContent align="end" className="z-[2000] w-56">
         <DropdownMenuLabel>
           <div className="truncate text-xs font-medium">{label}</div>
           <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
