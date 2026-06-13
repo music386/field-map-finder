@@ -75,22 +75,37 @@ function HomePage() {
 
   return (
     <div className="flex h-screen flex-col">
-      <header className="flex items-center justify-between gap-4 border-b bg-card px-4 py-2.5">
+      <header className="flex items-center justify-between gap-4 border-b border-b-[hsl(152_65%_36%)]/30 bg-card px-4 py-2.5 shadow-[inset_0_-2px_0_0_hsl(152_65%_36%)]">
         <div className="flex items-center gap-2">
           <img
             src={logo}
             alt="FieldMap logo"
-            className="h-8 w-8 rounded-md object-contain"
+            className="h-8 w-8 rounded-md object-contain ring-2 ring-[hsl(152_65%_36%)]/40"
           />
           <div>
-            <h1 className="text-sm font-semibold leading-none">FieldMap</h1>
+            <h1 className="text-sm font-semibold leading-none">
+              Field<span className="text-[hsl(152_65%_36%)]">Map</span>
+            </h1>
             <p className="text-[11px] text-muted-foreground">
-              Refugee-led projects, mapped.
+              Refugee-led & NGO initiatives, mapped.
             </p>
           </div>
         </div>
-        <RoleSwitcher role={role} onChange={setRole} />
+        <div className="flex items-center gap-3">
+          <div className="hidden items-center gap-3 text-[11px] text-muted-foreground sm:flex">
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block h-2.5 w-2.5 rounded-full bg-[hsl(152_65%_36%)]" />
+              RLO
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block h-2.5 w-2.5 rounded-full bg-[hsl(212_85%_48%)]" />
+              NGO
+            </span>
+          </div>
+          <RoleSwitcher role={role} onChange={setRole} />
+        </div>
       </header>
+
 
       <Filters
         value={filters}
