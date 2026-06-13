@@ -7,6 +7,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { orgById, projectsByOrg, type Project } from "@/lib/fieldmap-data";
+import { orgColor, orgInitials } from "@/lib/category-photos";
 
 export function OrgPanel({
   orgId,
@@ -27,14 +28,27 @@ export function OrgPanel({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full overflow-y-auto sm:max-w-md">
-        <SheetHeader className="space-y-2">
-          <Badge variant="outline" className="w-fit capitalize">
-            {org.orgType}
-          </Badge>
-          <SheetTitle className="text-xl leading-snug">{org.name}</SheetTitle>
-          <p className="text-xs text-muted-foreground">
-            {org.region}, {org.country}
-          </p>
+        <SheetHeader className="space-y-3">
+          <div className="flex items-center gap-3">
+            <div
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-base font-semibold text-white"
+              style={{ backgroundColor: orgColor(org.id) }}
+            >
+              {orgInitials(org.name)}
+            </div>
+            <div className="min-w-0">
+              <Badge variant="outline" className="capitalize">
+                {org.orgType}
+              </Badge>
+              <SheetTitle className="mt-1 text-xl leading-snug">
+                {org.name}
+              </SheetTitle>
+              <p className="text-xs text-muted-foreground">
+                {org.region}, {org.country}
+                {org.yearFounded ? ` · est. ${org.yearFounded}` : ""}
+              </p>
+            </div>
+          </div>
         </SheetHeader>
 
         <div className="space-y-5 px-4 pb-6">

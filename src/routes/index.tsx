@@ -10,7 +10,7 @@ import { ProjectCard } from "@/components/fieldmap/ProjectCard";
 import { OrgPanel } from "@/components/fieldmap/OrgPanel";
 import { RoleSwitcher, type Role } from "@/components/fieldmap/RoleSwitcher";
 import { projects as allProjects, type Project } from "@/lib/fieldmap-data";
-import { MapPin } from "lucide-react";
+import logo from "@/assets/fieldmap-logo.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
