@@ -257,7 +257,7 @@ function OrgAccountEditor({
       supabase.from("profiles").select("contact_email, contact_phone").eq("id", userId).maybeSingle(),
       supabase
         .from("user_projects")
-        .select("id, title, category, location_label")
+        .select("id, title, category, project_type, status, target_date, location_label, lat, lng, description, beneficiaries, needs")
         .eq("owner_id", userId)
         .order("created_at", { ascending: false }),
     ]);
