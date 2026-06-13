@@ -11,35 +11,61 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
-import type { Project } from "@/lib/fieldmap-data";
+import type { Project, EntityKind } from "@/lib/fieldmap-data";
 import { orgById, orgKind } from "@/lib/fieldmap-data";
 
-const PIN_COLORS = {
-  RLO: "hsl(152 65% 36%)", // green
-  NGO: "hsl(212 85% 48%)", // blue
-} as const;
+const PIN_COLORS: Record<EntityKind, string> = {
+  RLO: "hsl(152 65% 36%)",
+  NGO: "hsl(212 85% 48%)",
+};
 
-function makePinIcon(color: string) {
+function makePinIcon(kind: EntityKind, partner = false) {
+  const color = PIN_COLORS[kind];
+  const ring = partner
+    ? "0 0 0 2px #fff,0 0 0 4px " + color + ",0 1px 3px rgba(0,0,0,0.3)"
+    : "0 0 0 2px #fff,0 1px 3px rgba(0,0,0,0.3)";
   return L.divIcon({
-    className: "fieldmap-pin",
-    html: `<span style="display:block;height:14px;width:14px;border-radius:9999px;background:${color};box-shadow:0 0 0 2px #fff,0 1px 3px rgba(0,0,0,0.3)"></span>`,
+    className: `fieldmap-pin fieldmap-pin-${kind}`,
+    html: `<span style="display:block;height:14px;width:14px;border-radius:9999px;background:${color};box-shadow:${ring}"></span>`,
     iconSize: [14, 14],
     iconAnchor: [7, 7],
   });
 }
 
-const pinIconRLO = makePinIcon(PIN_COLORS.RLO);
-const pinIconNGO = makePinIcon(PIN_COLORS.NGO);
+const icons = {
+  RLO: makePinIcon("RLO"),
+  NGO: makePinIcon("NGO"),
+  "RLO-partner": makePinIcon("RLO", true),
+  "NGO-partner": makePinIcon("NGO", true),
+};
 
-function clusterIcon(cluster: { getChildCount: () => number }) {
-  const count = cluster.getChildCount();
+function clusterIcon(cluster: { getAllChildMarkers: () => L.Marker[] }) {
+  const markers = cluster.getAllChildMarkers();
+  let rlo = 0;
+  let ngo = 0;
+  for (const m of markers) {
+    const cn =
+      (m.options.icon as L.DivIcon | undefined)?.options?.className ?? "";
+    if (cn.includes("pin-NGO")) ngo++;
+    else rlo++;
+  }
+  const count = markers.length;
+  const green = PIN_COLORS.RLO;
+  const blue = PIN_COLORS.NGO;
+  let bg: string;
+  if (rlo > 0 && ngo > 0) {
+    bg = `conic-gradient(${green} 0 50%, ${blue} 50% 100%)`;
+  } else if (ngo > 0) {
+    bg = blue;
+  } else {
+    bg = green;
+  }
   return L.divIcon({
-    html: `<div style="display:flex;align-items:center;justify-content:center;height:36px;width:36px;border-radius:9999px;background:#fff;border:2px solid hsl(152 65% 36%);font:500 11px system-ui;color:#111;box-shadow:0 2px 6px rgba(0,0,0,0.15)">${count}</div>`,
+    html: `<div style="position:relative;height:36px;width:36px;border-radius:9999px;background:${bg};border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;"><span style="background:#fff;border-radius:9999px;height:22px;width:22px;display:flex;align-items:center;justify-content:center;font:600 11px system-ui;color:#111;">${count}</span></div>`,
     className: "fieldmap-cluster",
     iconSize: [36, 36],
   });
 }
-
 
 function FlyTo({ project }: { project: Project | null }) {
   const map = useMap();
@@ -51,6 +77,16 @@ function FlyTo({ project }: { project: Project | null }) {
     }
   }, [project, map]);
   return null;
+}
+
+// Small deterministic offset so overlapping partner pins are both visible
+// at high zoom (they still cluster when zoomed out).
+function offsetFor(seed: string, index: number): [number, number] {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 33 + seed.charCodeAt(i)) >>> 0;
+  const angle = ((h % 360) + index * 137) * (Math.PI / 180);
+  const r = 0.012; // ~1.3km
+  return [Math.sin(angle) * r, Math.cos(angle) * r];
 }
 
 export function FieldMapInner({
@@ -82,14 +118,21 @@ export function FieldMapInner({
         showCoverageOnHover={false}
         maxClusterRadius={50}
       >
-        {projects.map((p) => {
+        {projects.flatMap((p) => {
           const org = orgById(p.orgId);
           const kind = orgKind(org);
-          return (
+          const partnerOrgs = (p.partnerOrgIds ?? [])
+            .map((id) => orgById(id))
+            .filter((o): o is NonNullable<typeof o> => !!o);
+          const partnerLabel = partnerOrgs.length
+            ? ` · with ${partnerOrgs.map((o) => o.name).join(", ")}`
+            : "";
+
+          const main = (
             <Marker
               key={p.id}
               position={[p.lat, p.lng]}
-              icon={kind === "NGO" ? pinIconNGO : pinIconRLO}
+              icon={icons[kind]}
               eventHandlers={{ click: () => onSelect(p) }}
             >
               <Popup>
@@ -97,13 +140,37 @@ export function FieldMapInner({
                   <strong>{p.title}</strong>
                   <div style={{ color: "#666", fontSize: 11 }}>
                     {org?.name} · {kind}
+                    {partnerLabel}
                   </div>
                 </div>
               </Popup>
             </Marker>
           );
-        })}
 
+          const partnerPins = partnerOrgs.map((po, i) => {
+            const pKind = orgKind(po);
+            const [dlat, dlng] = offsetFor(p.id + po.id, i);
+            return (
+              <Marker
+                key={`${p.id}-partner-${po.id}`}
+                position={[p.lat + dlat, p.lng + dlng]}
+                icon={icons[`${pKind}-partner` as const]}
+                eventHandlers={{ click: () => onSelect(p) }}
+              >
+                <Popup>
+                  <div style={{ fontSize: 12 }}>
+                    <strong>{po.name}</strong>
+                    <div style={{ color: "#666", fontSize: 11 }}>
+                      {pKind} · partner on "{p.title}"
+                    </div>
+                  </div>
+                </Popup>
+              </Marker>
+            );
+          });
+
+          return [main, ...partnerPins];
+        })}
       </MarkerClusterGroup>
       <FlyTo project={focused} />
     </MapContainer>
