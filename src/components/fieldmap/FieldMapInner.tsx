@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import {
-  GeoJSON,
   MapContainer,
   Marker,
   Popup,
@@ -9,7 +8,6 @@ import {
 } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
-import type { Feature, FeatureCollection, Geometry } from "geojson";
 import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
@@ -72,11 +70,6 @@ function clusterIcon(cluster: { getAllChildMarkers: () => L.Marker[] }) {
 function MapPanes() {
   const map = useMap();
   useEffect(() => {
-    if (!map.getPane("countries")) {
-      const pane = map.createPane("countries");
-      pane.style.zIndex = "350";
-      pane.style.mixBlendMode = "multiply";
-    }
     if (!map.getPane("labels")) {
       const pane = map.createPane("labels");
       pane.style.zIndex = "650";
@@ -119,59 +112,6 @@ export function FieldMapInner({
 }) {
   const center = useMemo<[number, number]>(() => [10, 25], []);
 
-  const countryCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
-    for (const p of projects) {
-      const org = orgById(p.orgId);
-      if (!org) continue;
-      // Normalize a few country aliases to match the GeoJSON `name` field.
-      const name = org.country === "Türkiye" ? "Turkey" : org.country;
-      counts[name] = (counts[name] ?? 0) + 1;
-    }
-    return counts;
-  }, [projects]);
-
-  const maxCount = Math.max(1, ...Object.values(countryCounts));
-
-  const [countries, setCountries] =
-    useState<FeatureCollection<Geometry> | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch(
-      "https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json",
-    )
-      .then((r) => r.json())
-      .then((data: FeatureCollection<Geometry>) => {
-        if (!cancelled) setCountries(data);
-      })
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  function styleFor(feature?: Feature<Geometry>) {
-    const name = (feature?.properties as { name?: string } | undefined)?.name;
-    const c = (name && countryCounts[name]) || 0;
-    if (!c) {
-      return {
-        fillColor: "hsl(45 18% 88%)",
-        fillOpacity: 0,
-        color: "hsl(45 10% 72%)",
-        weight: 0.45,
-      };
-    }
-    const t = c / maxCount;
-    const lightness = 74 - t * 30; // 74% -> 44%
-    return {
-      fillColor: `hsl(152 65% ${lightness}%)`,
-      fillOpacity: 0.88,
-      color: "hsl(152 55% 30%)",
-      weight: 0.8,
-    };
-  }
-
   return (
     <MapContainer
       center={center}
@@ -191,30 +131,6 @@ export function FieldMapInner({
         pane="labels"
         url="https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png"
       />
-
-
-
-      {countries && (
-        <GeoJSON
-          pane="countries"
-          key={Object.entries(countryCounts)
-            .map(([k, v]) => `${k}:${v}`)
-            .join("|")}
-          data={countries}
-          style={styleFor as L.StyleFunction}
-          onEachFeature={(feature, layer) => {
-            const name = (feature.properties as { name?: string } | undefined)
-              ?.name;
-            const c = (name && countryCounts[name]) || 0;
-            if (c > 0) {
-              layer.bindTooltip(
-                `${name}: ${c} initiative${c === 1 ? "" : "s"}`,
-                { sticky: true },
-              );
-            }
-          }}
-        />
-      )}
       <MarkerClusterGroup
         chunkedLoading
         iconCreateFunction={clusterIcon}
