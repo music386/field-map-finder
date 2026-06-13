@@ -84,22 +84,26 @@ export function FieldMapInner({
       >
         {projects.map((p) => {
           const org = orgById(p.orgId);
+          const kind = orgKind(org);
           return (
             <Marker
               key={p.id}
               position={[p.lat, p.lng]}
-              icon={pinIcon}
+              icon={kind === "NGO" ? pinIconNGO : pinIconRLO}
               eventHandlers={{ click: () => onSelect(p) }}
             >
               <Popup>
                 <div style={{ fontSize: 12 }}>
                   <strong>{p.title}</strong>
-                  <div style={{ color: "#666", fontSize: 11 }}>{org?.name}</div>
+                  <div style={{ color: "#666", fontSize: 11 }}>
+                    {org?.name} · {kind}
+                  </div>
                 </div>
               </Popup>
             </Marker>
           );
         })}
+
       </MarkerClusterGroup>
       <FlyTo project={focused} />
     </MapContainer>
