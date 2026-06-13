@@ -840,7 +840,7 @@ function ProjectModal({
         perspectiveOrgId={perspectiveOrgId}
         open={open}
         onOpenChange={onOpenChange}
-        role="seeking_collaboration"
+        role="seeking_donors"
         onOrgClick={() => {}}
       />
     </div>
