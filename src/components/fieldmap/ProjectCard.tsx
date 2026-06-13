@@ -176,19 +176,36 @@ export function ProjectCard({
         </div>
 
         <div className="flex flex-col gap-1.5 px-4 pb-2 pt-4 border-b bg-muted/20">
-          <div className="flex items-start justify-between gap-3">
-            <h2 className="text-lg font-semibold leading-snug flex-1">
+          <div className="flex flex-wrap items-start justify-between gap-2">
+            <h2 className="text-lg font-semibold leading-snug flex-1 min-w-[60%]">
               {submission.title}
             </h2>
-            <Button asChild size="sm" className="shrink-0 self-center">
-              <a href={sms}>
-                <MessageSquare className="mr-1.5 h-3.5 w-3.5" />
-                {action.label}
-              </a>
-            </Button>
+            <div className="flex shrink-0 items-center gap-2">
+              <InAppMessageButton
+                projectRef={`seed:${project.id}`}
+                orgRef={`seed:${project.orgId}`}
+                ownerUserId={null}
+                defaultBody={action.body}
+              />
+              <Button asChild size="sm" className="shrink-0 self-center">
+                <a
+                  href={sms}
+                  onClick={() => {
+                    void logSmsOutreach({
+                      projectRef: `seed:${project.id}`,
+                      orgRef: `seed:${project.orgId}`,
+                      ownerUserId: null,
+                    });
+                  }}
+                >
+                  <MessageSquare className="mr-1.5 h-3.5 w-3.5" />
+                  {action.label}
+                </a>
+              </Button>
+            </div>
           </div>
           <p className="text-[11px] text-muted-foreground">
-            Opens your SMS app. The RLO will reply to your number directly.
+            SMS opens your messaging app. "Message in-app" keeps the conversation on FieldMap.
           </p>
           {isPartnerView && (
             <p className="mt-1 text-[11px] font-medium text-[hsl(212_85%_48%)]">
