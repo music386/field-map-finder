@@ -134,7 +134,7 @@ export function Filters({
         <SelectTrigger className="h-8 w-[150px] text-xs">
           <SelectValue placeholder="Country" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="z-[2000]">
           <SelectItem value="all">All countries</SelectItem>
           {countries.map((c) => (
             <SelectItem key={c} value={c}>
@@ -142,6 +142,7 @@ export function Filters({
             </SelectItem>
           ))}
         </SelectContent>
+
       </Select>
 
       {hasActive && (
