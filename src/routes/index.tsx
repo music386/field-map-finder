@@ -104,16 +104,6 @@ function HomePage() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="hidden items-center gap-3 text-[11px] text-muted-foreground sm:flex">
-            <span className="flex items-center gap-1.5">
-              <span className="inline-block h-2.5 w-2.5 rounded-full bg-[hsl(152_65%_36%)]" />
-              RLO
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="inline-block h-2.5 w-2.5 rounded-full bg-[hsl(212_85%_48%)]" />
-              NGO
-            </span>
-          </div>
           <Button
             size="sm"
             variant="outline"
