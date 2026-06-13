@@ -68,8 +68,9 @@ function HomePage() {
     });
   }, [filters]);
 
-  function openProject(p: Project) {
+  function openProject(p: Project, perspective?: string) {
     setSelected(p);
+    setPerspectiveOrgId(perspective ?? null);
     setProjectOpen(true);
     setOrgOpen(false);
   }
