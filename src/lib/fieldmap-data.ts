@@ -47,6 +47,8 @@ export type ProjectStatus =
 
 export type ProjectType = "time-bound" | "ongoing";
 
+export type EntityKind = "RLO" | "NGO";
+
 export interface Organization {
   id: string;
   name: string;
@@ -59,7 +61,9 @@ export interface Organization {
   yearFounded?: number;
   orgType: OrgType;
   brings: OrgStrength[];
+  entityKind?: EntityKind; // defaults to "RLO"
 }
+
 
 export interface Project {
   id: string;
@@ -74,7 +78,7 @@ export interface Project {
   description: string;
   beneficiaries: BeneficiaryRange;
   needs: {
-    funding?: { amount: number; currency: "USD" | "EUR" };
+    funding?: { amount: number; currency: "USD" | "EUR"; raised?: number };
     equipment?: string;
     expertise?: Expertise[];
     training?: string;
@@ -83,6 +87,7 @@ export interface Project {
   status: ProjectStatus;
   photos?: string[];
 }
+
 
 export const organizations: Organization[] = [
   {
@@ -441,7 +446,83 @@ export const organizations: Organization[] = [
       "local knowledge",
     ],
   },
+  {
+    id: "org-ngo-1",
+    name: "Horizon Relief International",
+    country: "Kenya",
+    region: "Nairobi County",
+    lat: -1.286389,
+    lng: 36.817223,
+    phone: "+254712900001",
+    description:
+      "International NGO partnering with refugee-led groups across East Africa to co-deliver health and livelihoods programmes.",
+    yearFounded: 2002,
+    orgType: "local NGO",
+    brings: ["ground delivery capacity", "established beneficiary relationships"],
+    entityKind: "NGO",
+  },
+  {
+    id: "org-ngo-2",
+    name: "Mediterranean Shelter Aid",
+    country: "Greece",
+    region: "Lesvos",
+    lat: 39.1,
+    lng: 26.55,
+    phone: "+306900900002",
+    description:
+      "Greek NGO operating reception support and winter shelter response across the Aegean islands.",
+    yearFounded: 2015,
+    orgType: "local NGO",
+    brings: ["ground delivery capacity", "volunteer network"],
+    entityKind: "NGO",
+  },
+  {
+    id: "org-ngo-3",
+    name: "Andes Migration Support",
+    country: "Colombia",
+    region: "Bogotá",
+    lat: 4.711,
+    lng: -74.0721,
+    phone: "+573000900003",
+    description:
+      "Colombian NGO running urban integration and case-management services for Venezuelan migrants.",
+    yearFounded: 2017,
+    orgType: "local NGO",
+    brings: ["established beneficiary relationships", "ground delivery capacity"],
+    entityKind: "NGO",
+  },
+  {
+    id: "org-ngo-4",
+    name: "Levant Health Partners",
+    country: "Jordan",
+    region: "Mafraq Governorate",
+    lat: 32.34,
+    lng: 36.21,
+    phone: "+962790900004",
+    description:
+      "Regional NGO running primary healthcare clinics in and around Zaatari and host communities.",
+    yearFounded: 2013,
+    orgType: "local NGO",
+    brings: ["ground delivery capacity", "established beneficiary relationships"],
+    entityKind: "NGO",
+  },
+  {
+    id: "org-ngo-5",
+    name: "Bay of Bengal Education Trust",
+    country: "Bangladesh",
+    region: "Chittagong Division",
+    lat: 21.43,
+    lng: 92.0,
+    phone: "+8801700900005",
+    description:
+      "Bangladeshi NGO running learning centres in the Rohingya response, partnering with refugee-led teaching circles.",
+    yearFounded: 2018,
+    orgType: "local NGO",
+    brings: ["ground delivery capacity", "volunteer network"],
+    entityKind: "NGO",
+  },
 ];
+
 
 export const projects: Project[] = [
   {
@@ -976,7 +1057,101 @@ export const projects: Project[] = [
     },
     status: "seeking support",
   },
+  {
+    id: "p-ngo-1",
+    orgId: "org-ngo-1",
+    title: "Mobile maternal health clinic",
+    category: "healthcare",
+    type: "ongoing",
+    locationLabel: "Eastleigh, Nairobi, Kenya",
+    lat: -1.276,
+    lng: 36.852,
+    description:
+      "A weekly mobile clinic serving urban refugee mothers in Eastleigh, co-staffed with local refugee-led health volunteers.",
+    beneficiaries: "500–2,000",
+    needs: {
+      funding: { amount: 22000, currency: "USD", raised: 9500 },
+      partnership: true,
+    },
+    status: "partially supported",
+  },
+  {
+    id: "p-ngo-2",
+    orgId: "org-ngo-2",
+    title: "Winter shelter kits for new arrivals",
+    category: "shelter",
+    type: "time-bound",
+    targetDate: "2026-12-15",
+    locationLabel: "Mavrovouni site, Lesvos, Greece",
+    lat: 39.11,
+    lng: 26.56,
+    description:
+      "Procurement and distribution of 400 winter kits (blankets, thermal mats, heaters) ahead of the cold season.",
+    beneficiaries: "500–2,000",
+    needs: {
+      funding: { amount: 18000, currency: "EUR", raised: 4200 },
+      equipment: "Thermal blankets, portable heaters",
+    },
+    status: "seeking support",
+  },
+  {
+    id: "p-ngo-3",
+    orgId: "org-ngo-3",
+    title: "Urban integration case management",
+    category: "legal aid",
+    type: "ongoing",
+    locationLabel: "Kennedy, Bogotá, Colombia",
+    lat: 4.629,
+    lng: -74.155,
+    description:
+      "Caseworkers help Venezuelan families regularise status and access health, schooling and housing in Bogotá.",
+    beneficiaries: "2,000+",
+    needs: {
+      funding: { amount: 30000, currency: "USD", raised: 21000 },
+      expertise: ["legal"],
+    },
+    status: "partially supported",
+  },
+  {
+    id: "p-ngo-4",
+    orgId: "org-ngo-4",
+    title: "Primary healthcare clinic, Mafraq",
+    category: "healthcare",
+    type: "ongoing",
+    locationLabel: "Mafraq, Jordan",
+    lat: 32.343,
+    lng: 36.208,
+    description:
+      "Daily primary care services for Syrian refugees and host community, with referrals into the Jordanian system.",
+    beneficiaries: "2,000+",
+    needs: {
+      funding: { amount: 45000, currency: "USD", raised: 12000 },
+      expertise: ["medical"],
+      partnership: true,
+    },
+    status: "partially supported",
+  },
+  {
+    id: "p-ngo-5",
+    orgId: "org-ngo-5",
+    title: "Learning centres in Camp 4",
+    category: "education",
+    type: "time-bound",
+    targetDate: "2027-06-30",
+    locationLabel: "Camp 4, Cox's Bazar, Bangladesh",
+    lat: 21.21,
+    lng: 92.16,
+    description:
+      "Operating 6 learning centres co-run with Rohingya teaching circles, serving 1,200 children with daily classes.",
+    beneficiaries: "500–2,000",
+    needs: {
+      funding: { amount: 27000, currency: "USD", raised: 8000 },
+      training: "Teacher training for 24 volunteer instructors",
+    },
+    status: "seeking support",
+  },
 ];
+
 
 export const categories: Category[] = [
   "energy",
@@ -1007,4 +1182,8 @@ export function orgById(id: string) {
 }
 export function projectsByOrg(orgId: string) {
   return projects.filter((p) => p.orgId === orgId);
+}
+
+export function orgKind(o: Organization | undefined | null): EntityKind {
+  return o?.entityKind ?? "RLO";
 }

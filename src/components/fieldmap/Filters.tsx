@@ -62,7 +62,7 @@ export function Filters({
         <SelectTrigger className="h-8 w-[150px] text-xs">
           <SelectValue placeholder="Category" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="z-[2000]">
           <SelectItem value="all">All categories</SelectItem>
           {categories.map((c) => (
             <SelectItem key={c} value={c} className="capitalize">
@@ -70,6 +70,7 @@ export function Filters({
             </SelectItem>
           ))}
         </SelectContent>
+
       </Select>
 
       <Popover>
@@ -83,7 +84,7 @@ export function Filters({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-48" align="start">
+        <PopoverContent className="z-[2000] w-48" align="start">
           <div className="space-y-2">
             {needsOptions.map((n) => {
               const checked = value.needs.includes(n);
@@ -118,12 +119,13 @@ export function Filters({
         <SelectTrigger className="h-8 w-[140px] text-xs">
           <SelectValue />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="z-[2000]">
           <SelectItem value="both">Any project type</SelectItem>
           <SelectItem value="time-bound">Time-bound</SelectItem>
           <SelectItem value="ongoing">Ongoing mission</SelectItem>
         </SelectContent>
       </Select>
+
 
       <Select
         value={value.country}
@@ -132,7 +134,7 @@ export function Filters({
         <SelectTrigger className="h-8 w-[150px] text-xs">
           <SelectValue placeholder="Country" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="z-[2000]">
           <SelectItem value="all">All countries</SelectItem>
           {countries.map((c) => (
             <SelectItem key={c} value={c}>
@@ -140,6 +142,7 @@ export function Filters({
             </SelectItem>
           ))}
         </SelectContent>
+
       </Select>
 
       {hasActive && (

@@ -1,12 +1,14 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { orgById, type Project } from "@/lib/fieldmap-data";
+import { Progress } from "@/components/ui/progress";
+import { orgById, orgKind, type Project } from "@/lib/fieldmap-data";
 import { categoryPhotos, orgColor, orgInitials } from "@/lib/category-photos";
 import { deriveSubmission } from "@/lib/submissions";
 import { SidePanel } from "./SidePanel";
 import type { Role } from "./RoleSwitcher";
 import { MessageSquare } from "lucide-react";
+
 
 function buildSmsLink(phone: string, body: string) {
   const cleaned = phone.replace(/\s+/g, "");
@@ -76,6 +78,7 @@ export function ProjectCard({
   const action = actionFor(role, project, org.name);
   const sms = buildSmsLink(org.phone, action.body);
   const photo = categoryPhotos[project.category];
+  const kind = orgKind(org);
   const submittedDate = new Date(submission.submitted_at).toLocaleString(
     undefined,
     {
@@ -86,6 +89,20 @@ export function ProjectCard({
       minute: "2-digit",
     },
   );
+
+  // Funding progress (deterministic fallback if raised isn't set)
+  const funding = project.needs.funding;
+  let raised = funding?.raised;
+  if (funding && raised === undefined) {
+    let h = 0;
+    for (let i = 0; i < project.id.length; i++)
+      h = (h * 33 + project.id.charCodeAt(i)) >>> 0;
+    raised = Math.round((funding.amount * ((h % 70) + 5)) / 100);
+  }
+  const fundingPct = funding
+    ? Math.min(100, Math.round(((raised ?? 0) / funding.amount) * 100))
+    : 0;
+
 
   return (
     <SidePanel open={open} onClose={() => onOpenChange(false)}>
@@ -106,12 +123,23 @@ export function ProjectCard({
             {project.category}
           </Badge>
           <Badge
-            className="absolute right-3 top-3"
+            className={
+              "absolute right-3 top-3 " +
+              (kind === "NGO"
+                ? "bg-[hsl(212_85%_48%)] text-white hover:bg-[hsl(212_85%_44%)]"
+                : "bg-[hsl(152_65%_36%)] text-white hover:bg-[hsl(152_65%_32%)]")
+            }
+          >
+            {kind}
+          </Badge>
+          <Badge
+            className="absolute right-3 top-11"
             variant={submission.type === "Project" ? "default" : "outline"}
           >
             {submission.type}
           </Badge>
         </div>
+
 
         <div className="flex items-center gap-3 border-b px-4 py-3">
           <button
@@ -157,17 +185,34 @@ export function ProjectCard({
 
           <Separator />
 
+          {funding && (
+            <section className="space-y-2 rounded-md border border-[hsl(152_65%_36%)]/30 bg-[hsl(152_65%_36%)]/5 p-3">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-semibold uppercase tracking-wide text-muted-foreground">
+                  Funding
+                </span>
+                <span className="font-medium">{fundingPct}% raised</span>
+              </div>
+              <Progress
+                value={fundingPct}
+                className="h-2 [&>div]:bg-[hsl(152_65%_36%)]"
+              />
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span>
+                  {funding.currency} {(raised ?? 0).toLocaleString()} raised
+                </span>
+                <span>
+                  of {funding.currency} {funding.amount.toLocaleString()}
+                </span>
+              </div>
+            </section>
+          )}
+
           <section className="space-y-2">
             <h4 className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-              What this initiative needs
+              Other needs
             </h4>
             <div className="flex flex-wrap gap-1.5">
-              {project.needs.funding && (
-                <Badge variant="default">
-                  Funding: {project.needs.funding.currency}{" "}
-                  {project.needs.funding.amount.toLocaleString()}
-                </Badge>
-              )}
               {project.needs.expertise?.map((e) => (
                 <Badge key={e} variant="secondary" className="capitalize">
                   Expertise: {e}
@@ -186,8 +231,17 @@ export function ProjectCard({
               {project.needs.partnership && (
                 <Badge variant="secondary">Partnership with NGO</Badge>
               )}
+              {!project.needs.expertise?.length &&
+                !project.needs.equipment &&
+                !project.needs.training &&
+                !project.needs.partnership && (
+                  <span className="text-xs text-muted-foreground">
+                    No additional needs listed.
+                  </span>
+                )}
             </div>
           </section>
+
 
           <section className="space-y-1">
             <h4 className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
