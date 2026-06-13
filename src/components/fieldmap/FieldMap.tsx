@@ -24,7 +24,7 @@ const pinIcon = L.divIcon({
 });
 
 // Neutral cluster icon — count only, no funding or urgency framing.
-function clusterIcon(cluster: L.MarkerCluster) {
+function clusterIcon(cluster: { getChildCount: () => number }) {
   const count = cluster.getChildCount();
   return L.divIcon({
     html: `<div class="flex h-9 w-9 items-center justify-center rounded-full bg-card border-2 border-[hsl(var(--pin))] text-[11px] font-medium text-foreground shadow-md">${count}</div>`,
