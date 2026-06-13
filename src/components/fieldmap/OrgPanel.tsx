@@ -1,6 +1,12 @@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { orgById, orgKind, projectsByOrg, type Project } from "@/lib/fieldmap-data";
+import {
+  orgById,
+  orgKind,
+  projects as allProjects,
+  projectsByOrg,
+  type Project,
+} from "@/lib/fieldmap-data";
 import { orgColor, orgInitials } from "@/lib/category-photos";
 import { SidePanel } from "./SidePanel";
 
