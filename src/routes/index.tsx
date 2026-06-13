@@ -8,9 +8,12 @@ import {
 } from "@/components/fieldmap/Filters";
 import { ProjectCard } from "@/components/fieldmap/ProjectCard";
 import { OrgPanel } from "@/components/fieldmap/OrgPanel";
+import { PartnershipsPanel } from "@/components/fieldmap/PartnershipsPanel";
 import { DonorsGrid } from "@/components/fieldmap/DonorsGrid";
 import { RoleSwitcher, type Role } from "@/components/fieldmap/RoleSwitcher";
 import { projects as allProjects, type Project, orgById, orgKind } from "@/lib/fieldmap-data";
+import { Button } from "@/components/ui/button";
+import { Handshake } from "lucide-react";
 import logo from "@/assets/fieldmap-logo.png";
 
 export const Route = createFileRoute("/")({
