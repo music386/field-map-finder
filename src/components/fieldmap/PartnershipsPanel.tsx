@@ -147,7 +147,7 @@ export function PartnershipsPanel({
 
         <section className="space-y-3">
           <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Donor → project funding
+            DONOR → INITIATIVE FUNDING
           </h3>
           <ul className="space-y-3">
             {donationItems.map(({ donation, project, donor }) => {
