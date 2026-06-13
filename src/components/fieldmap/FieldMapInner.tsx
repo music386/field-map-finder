@@ -80,15 +80,30 @@ function MapPanes() {
   return null;
 }
 
-function FlyTo({ project }: { project: Project | null }) {
+function FlyTo({
+  focused,
+}: {
+  focused: { project: Project; perspectiveOrgId?: string | null } | null;
+}) {
   const map = useMap();
   useEffect(() => {
-    if (project) {
-      map.flyTo([project.lat, project.lng], Math.max(map.getZoom(), 7), {
-        duration: 0.8,
-      });
+    if (focused) {
+      const p = focused.project;
+      let lat = p.lat;
+      let lng = p.lng;
+      if (
+        focused.perspectiveOrgId &&
+        focused.perspectiveOrgId !== p.orgId &&
+        (p.partnerOrgIds ?? []).includes(focused.perspectiveOrgId)
+      ) {
+        const idx = (p.partnerOrgIds ?? []).indexOf(focused.perspectiveOrgId);
+        const [dlat, dlng] = offsetFor(p.id + focused.perspectiveOrgId, idx);
+        lat += dlat;
+        lng += dlng;
+      }
+      map.flyTo([lat, lng], Math.max(map.getZoom(), 7), { duration: 0.8 });
     }
-  }, [project, map]);
+  }, [focused, map]);
   return null;
 }
 
