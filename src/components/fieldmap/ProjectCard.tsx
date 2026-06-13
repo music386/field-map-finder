@@ -336,19 +336,6 @@ export function ProjectCard({
             </div>
           </div>
 
-          <Separator />
-
-          <div className="space-y-2">
-            <Button asChild className="w-full" size="lg">
-              <a href={sms}>
-                <MessageSquare className="mr-2 h-4 w-4" />
-                {action.label}
-              </a>
-            </Button>
-            <p className="text-center text-[11px] text-muted-foreground">
-              Opens your SMS app. The RLO will reply to your number directly.
-            </p>
-          </div>
         </div>
       </div>
     </SidePanel>
