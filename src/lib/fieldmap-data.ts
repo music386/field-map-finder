@@ -86,6 +86,7 @@ export interface Project {
   };
   status: ProjectStatus;
   photos?: string[];
+  partnerOrgIds?: string[]; // co-implementing orgs (NGO↔RLO partnerships)
 }
 
 
