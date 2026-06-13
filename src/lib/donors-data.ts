@@ -171,7 +171,7 @@ export const donors: Donor[] = [
     ticketSize: "$100k – $2M",
     contact: "officeofgrants@fordfoundation.org",
     recentlyFunded: 13,
-  ),
+  },
   {
     id: "d-cisco-foundation",
     name: "Cisco Foundation",
