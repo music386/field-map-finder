@@ -1,0 +1,609 @@
+// FieldMap seed data: refugee-led organizations and their projects.
+// Static, in-memory dataset — trust-based, no verification, no backend.
+
+export type OrgType =
+  | "community-based"
+  | "refugee-led"
+  | "diaspora-led"
+  | "local NGO";
+
+export type OrgStrength =
+  | "community trust"
+  | "local knowledge"
+  | "ground delivery capacity"
+  | "established beneficiary relationships"
+  | "language/cultural access"
+  | "volunteer network";
+
+export type Category =
+  | "energy"
+  | "water/WASH"
+  | "education"
+  | "healthcare"
+  | "livelihoods"
+  | "shelter"
+  | "legal aid"
+  | "protection"
+  | "food security";
+
+export type Expertise =
+  | "engineering"
+  | "medical"
+  | "legal"
+  | "agricultural"
+  | "IT"
+  | "project management";
+
+export type BeneficiaryRange =
+  | "under 100"
+  | "100–500"
+  | "500–2,000"
+  | "2,000+";
+
+export type ProjectStatus =
+  | "seeking support"
+  | "partially supported"
+  | "fully supported";
+
+export type ProjectType = "time-bound" | "ongoing";
+
+export interface Organization {
+  id: string;
+  name: string;
+  country: string;
+  region: string;
+  lat: number;
+  lng: number;
+  phone: string;
+  description?: string;
+  yearFounded?: number;
+  orgType: OrgType;
+  brings: OrgStrength[];
+}
+
+export interface Project {
+  id: string;
+  orgId: string;
+  title: string;
+  category: Category;
+  type: ProjectType;
+  targetDate?: string; // ISO yyyy-mm-dd if time-bound
+  locationLabel: string; // human-readable
+  lat: number;
+  lng: number;
+  description: string;
+  beneficiaries: BeneficiaryRange;
+  needs: {
+    funding?: { amount: number; currency: "USD" | "EUR" };
+    equipment?: string;
+    expertise?: Expertise[];
+    training?: string;
+    partnership?: boolean;
+  };
+  status: ProjectStatus;
+  photos?: string[];
+}
+
+export const organizations: Organization[] = [
+  {
+    id: "org-1",
+    name: "Kakuma Solar Collective",
+    country: "Kenya",
+    region: "Turkana County",
+    lat: 3.7167,
+    lng: 34.8667,
+    phone: "+254712000001",
+    description:
+      "A five-person collective of South Sudanese and Congolese refugees installing small solar systems across Kakuma. Founded by former electricians from Juba.",
+    yearFounded: 2019,
+    orgType: "refugee-led",
+    brings: ["community trust", "ground delivery capacity", "local knowledge"],
+  },
+  {
+    id: "org-2",
+    name: "Nakivale Women's Tailoring Group",
+    country: "Uganda",
+    region: "Isingiro District",
+    lat: -0.7833,
+    lng: 30.95,
+    phone: "+256772000002",
+    description:
+      "Burundian and Rwandan women running a tailoring cooperative in Nakivale settlement. Training new arrivals in skills that earn income from day one.",
+    yearFounded: 2017,
+    orgType: "community-based",
+    brings: [
+      "community trust",
+      "established beneficiary relationships",
+      "language/cultural access",
+    ],
+  },
+  {
+    id: "org-3",
+    name: "Adjumani Youth Health Outreach",
+    country: "Uganda",
+    region: "Adjumani District",
+    lat: 3.3772,
+    lng: 31.7906,
+    phone: "+256772000003",
+    description:
+      "South Sudanese youth-led group running mobile health awareness sessions across settlements in West Nile.",
+    yearFounded: 2020,
+    orgType: "refugee-led",
+    brings: ["volunteer network", "language/cultural access", "community trust"],
+  },
+  {
+    id: "org-4",
+    name: "Dadaab Education Initiative",
+    country: "Kenya",
+    region: "Garissa County",
+    lat: 0.0556,
+    lng: 40.305,
+    phone: "+254712000004",
+    description:
+      "Somali refugee teachers running supplementary classes for girls preparing for KCSE exams in Dadaab.",
+    yearFounded: 2015,
+    orgType: "refugee-led",
+    brings: [
+      "established beneficiary relationships",
+      "language/cultural access",
+      "local knowledge",
+    ],
+  },
+  {
+    id: "org-5",
+    name: "Beirut Syrian Diaspora Network",
+    country: "Lebanon",
+    region: "Beirut Governorate",
+    lat: 33.8938,
+    lng: 35.5018,
+    phone: "+9613000005",
+    description:
+      "Syrian professionals in Beirut coordinating legal aid and documentation support for newly displaced families.",
+    yearFounded: 2014,
+    orgType: "diaspora-led",
+    brings: ["language/cultural access", "community trust", "volunteer network"],
+  },
+  {
+    id: "org-6",
+    name: "Cox's Bazar Rohingya Women's Circle",
+    country: "Bangladesh",
+    region: "Chittagong Division",
+    lat: 21.2,
+    lng: 92.1667,
+    phone: "+8801700000006",
+    description:
+      "Rohingya women running child protection circles and informal learning spaces across the Kutupalong camps.",
+    yearFounded: 2018,
+    orgType: "refugee-led",
+    brings: [
+      "community trust",
+      "language/cultural access",
+      "established beneficiary relationships",
+    ],
+  },
+  {
+    id: "org-7",
+    name: "Bidi Bidi Farmers Cooperative",
+    country: "Uganda",
+    region: "Yumbe District",
+    lat: 3.4667,
+    lng: 31.4,
+    phone: "+256772000007",
+    description:
+      "South Sudanese farmers reviving cassava and groundnut cultivation on plots allocated within Bidi Bidi.",
+    yearFounded: 2018,
+    orgType: "community-based",
+    brings: ["local knowledge", "ground delivery capacity", "volunteer network"],
+  },
+  {
+    id: "org-8",
+    name: "Athens Afghan Welcome House",
+    country: "Greece",
+    region: "Attica",
+    lat: 37.9838,
+    lng: 23.7275,
+    phone: "+306900000008",
+    description:
+      "Afghan families running a community shelter and orientation hub for new arrivals in central Athens.",
+    yearFounded: 2016,
+    orgType: "diaspora-led",
+    brings: ["language/cultural access", "community trust", "volunteer network"],
+  },
+  {
+    id: "org-9",
+    name: "Goma Lake Hygiene Brigade",
+    country: "DR Congo",
+    region: "North Kivu",
+    lat: -1.6792,
+    lng: 29.2228,
+    phone: "+243800000009",
+    description:
+      "Internally displaced volunteers maintaining handwashing stations and water points around Goma's IDP sites.",
+    yearFounded: 2021,
+    orgType: "community-based",
+    brings: [
+      "ground delivery capacity",
+      "volunteer network",
+      "established beneficiary relationships",
+    ],
+  },
+  {
+    id: "org-10",
+    name: "Amman Iraqi Legal Aid Circle",
+    country: "Jordan",
+    region: "Amman Governorate",
+    lat: 31.9539,
+    lng: 35.9106,
+    phone: "+962790000010",
+    description:
+      "Iraqi lawyers in exile providing pro-bono case work for refugees navigating UNHCR and resettlement processes.",
+    yearFounded: 2013,
+    orgType: "diaspora-led",
+    brings: ["language/cultural access", "community trust"],
+  },
+  {
+    id: "org-11",
+    name: "Kampala Refugee Tech Hub",
+    country: "Uganda",
+    region: "Kampala",
+    lat: 0.3476,
+    lng: 32.5825,
+    phone: "+256772000011",
+    description:
+      "Urban refugee youth running a coding and digital literacy space serving Eritrean, Somali and Congolese members.",
+    yearFounded: 2019,
+    orgType: "refugee-led",
+    brings: ["volunteer network", "community trust", "language/cultural access"],
+  },
+  {
+    id: "org-12",
+    name: "Maicao Venezuelan Mothers Network",
+    country: "Colombia",
+    region: "La Guajira",
+    lat: 11.3833,
+    lng: -72.2333,
+    phone: "+573000000012",
+    description:
+      "Venezuelan mothers organising food kitchens and child feeding programs along the Colombia-Venezuela border.",
+    yearFounded: 2019,
+    orgType: "refugee-led",
+    brings: [
+      "community trust",
+      "established beneficiary relationships",
+      "ground delivery capacity",
+    ],
+  },
+];
+
+export const projects: Project[] = [
+  {
+    id: "p-1",
+    orgId: "org-1",
+    title: "Solar lanterns for 60 households",
+    category: "energy",
+    type: "time-bound",
+    targetDate: "2027-03-31",
+    locationLabel: "Kakuma Camp Zone 4, Turkana County, Kenya",
+    lat: 3.72,
+    lng: 34.87,
+    description:
+      "Households in Zone 4 rely on kerosene for lighting, which is expensive and unsafe. We will assemble and distribute 60 solar lantern kits with phone-charging ports. Beneficiaries are families with school-age children identified through block leaders.",
+    beneficiaries: "100–500",
+    needs: {
+      funding: { amount: 8000, currency: "EUR" },
+      equipment: "60 solar panels (10W) and lithium battery packs",
+      expertise: ["engineering"],
+    },
+    status: "seeking support",
+  },
+  {
+    id: "p-2",
+    orgId: "org-1",
+    title: "Solar mini-grid for primary school",
+    category: "energy",
+    type: "ongoing",
+    locationLabel: "Kakuma 2, Turkana County, Kenya",
+    lat: 3.73,
+    lng: 34.86,
+    description:
+      "The primary school has no electricity, which limits evening study and adult literacy classes. We are progressively installing rooftop solar and a small battery bank. The school serves about 800 learners across two shifts.",
+    beneficiaries: "500–2,000",
+    needs: {
+      funding: { amount: 15000, currency: "USD" },
+      partnership: true,
+    },
+    status: "partially supported",
+  },
+  {
+    id: "p-3",
+    orgId: "org-2",
+    title: "Tailoring apprenticeship for 30 women",
+    category: "livelihoods",
+    type: "time-bound",
+    targetDate: "2026-09-30",
+    locationLabel: "Nakivale Settlement, Isingiro District, Uganda",
+    lat: -0.78,
+    lng: 30.95,
+    description:
+      "Newly arrived Burundian women have few income options inside the settlement. We will run a six-month tailoring apprenticeship culminating in starter kits. Beneficiaries are 30 women heading households.",
+    beneficiaries: "under 100",
+    needs: {
+      funding: { amount: 4500, currency: "USD" },
+      equipment: "6 manual sewing machines, fabric stock",
+      training: "Business basics for cooperative members",
+    },
+    status: "seeking support",
+  },
+  {
+    id: "p-4",
+    orgId: "org-3",
+    title: "Mobile sexual health outreach",
+    category: "healthcare",
+    type: "ongoing",
+    locationLabel: "Pagirinya Settlement, Adjumani, Uganda",
+    lat: 3.38,
+    lng: 31.79,
+    description:
+      "Young people across Adjumani settlements have limited access to sexual and reproductive health information. We run peer-led sessions and refer cases onward. Coverage is roughly 1,500 youth per quarter.",
+    beneficiaries: "500–2,000",
+    needs: {
+      expertise: ["medical"],
+      training: "Counsellor refresher training",
+      partnership: true,
+    },
+    status: "partially supported",
+  },
+  {
+    id: "p-5",
+    orgId: "org-4",
+    title: "KCSE preparation classes for girls",
+    category: "education",
+    type: "time-bound",
+    targetDate: "2026-10-15",
+    locationLabel: "Dadaab, Garissa County, Kenya",
+    lat: 0.06,
+    lng: 40.31,
+    description:
+      "Somali girls in Dadaab face high dropout rates before national exams. We run weekend revision classes in math, English and biology for 45 candidates. Teachers are qualified refugees living in the camp.",
+    beneficiaries: "under 100",
+    needs: {
+      funding: { amount: 3200, currency: "USD" },
+      equipment: "Textbooks and exam past-papers",
+    },
+    status: "seeking support",
+  },
+  {
+    id: "p-6",
+    orgId: "org-5",
+    title: "Legal documentation clinic for Syrian families",
+    category: "legal aid",
+    type: "ongoing",
+    locationLabel: "Bourj Hammoud, Beirut, Lebanon",
+    lat: 33.89,
+    lng: 35.54,
+    description:
+      "Many Syrian families lack civil documentation after years of displacement. We run a weekly clinic helping with birth registration, residency renewal and UNHCR appointments. Around 40 cases are opened each month.",
+    beneficiaries: "500–2,000",
+    needs: {
+      expertise: ["legal"],
+      funding: { amount: 12000, currency: "EUR" },
+    },
+    status: "partially supported",
+  },
+  {
+    id: "p-7",
+    orgId: "org-6",
+    title: "Child-friendly learning spaces",
+    category: "education",
+    type: "ongoing",
+    locationLabel: "Kutupalong Camp, Cox's Bazar, Bangladesh",
+    lat: 21.2,
+    lng: 92.17,
+    description:
+      "Rohingya children have limited access to structured learning. We run three child-friendly spaces with Burmese-speaking facilitators. Sessions blend literacy, play and psychosocial support.",
+    beneficiaries: "2,000+",
+    needs: {
+      funding: { amount: 22000, currency: "USD" },
+      training: "Trauma-informed facilitation training",
+      partnership: true,
+    },
+    status: "seeking support",
+  },
+  {
+    id: "p-8",
+    orgId: "org-6",
+    title: "Women's protection drop-in centre",
+    category: "protection",
+    type: "ongoing",
+    locationLabel: "Kutupalong Camp, Cox's Bazar, Bangladesh",
+    lat: 21.21,
+    lng: 92.16,
+    description:
+      "Rohingya women report gender-based violence with few safe places to seek help. Our drop-in centre offers referrals, counselling and a women-only meeting space. Roughly 80 women visit weekly.",
+    beneficiaries: "500–2,000",
+    needs: {
+      funding: { amount: 9000, currency: "USD" },
+      expertise: ["medical", "legal"],
+    },
+    status: "seeking support",
+  },
+  {
+    id: "p-9",
+    orgId: "org-7",
+    title: "Cassava seed multiplication plots",
+    category: "food security",
+    type: "time-bound",
+    targetDate: "2026-12-15",
+    locationLabel: "Bidi Bidi Zone 3, Yumbe District, Uganda",
+    lat: 3.47,
+    lng: 31.4,
+    description:
+      "Cassava cuttings of disease-resistant varieties are scarce in West Nile. We will plant seed-multiplication plots on 12 acres and distribute cuttings to 200 households. Yields support household food security.",
+    beneficiaries: "500–2,000",
+    needs: {
+      funding: { amount: 6500, currency: "USD" },
+      expertise: ["agricultural"],
+      equipment: "Disease-resistant cassava cuttings, hand tools",
+    },
+    status: "seeking support",
+  },
+  {
+    id: "p-10",
+    orgId: "org-8",
+    title: "Welcome shelter and orientation hub",
+    category: "shelter",
+    type: "ongoing",
+    locationLabel: "Kypseli, Athens, Greece",
+    lat: 37.99,
+    lng: 23.73,
+    description:
+      "Afghan families arriving in Athens often spend nights without shelter. Our hub provides short-stay beds, orientation, and referrals to legal aid. We host roughly 25 people at a time.",
+    beneficiaries: "100–500",
+    needs: {
+      funding: { amount: 18000, currency: "EUR" },
+      partnership: true,
+    },
+    status: "partially supported",
+  },
+  {
+    id: "p-11",
+    orgId: "org-9",
+    title: "Handwashing stations across IDP sites",
+    category: "water/WASH",
+    type: "ongoing",
+    locationLabel: "Kanyaruchinya, North Kivu, DR Congo",
+    lat: -1.62,
+    lng: 29.27,
+    description:
+      "Cholera risk is high across displacement sites around Goma. We maintain 40 handwashing stations and run hygiene-promotion sessions. Each station serves around 300 people daily.",
+    beneficiaries: "2,000+",
+    needs: {
+      funding: { amount: 11000, currency: "USD" },
+      equipment: "Replacement taps, soap stock",
+      expertise: ["engineering"],
+    },
+    status: "seeking support",
+  },
+  {
+    id: "p-12",
+    orgId: "org-10",
+    title: "Pro-bono case work for resettlement candidates",
+    category: "legal aid",
+    type: "ongoing",
+    locationLabel: "East Amman, Jordan",
+    lat: 31.95,
+    lng: 35.93,
+    description:
+      "Iraqi refugees navigating resettlement face complex paperwork and interview preparation. Our lawyers handle around 60 active cases at any time. Services are free at point of use.",
+    beneficiaries: "100–500",
+    needs: {
+      funding: { amount: 7500, currency: "USD" },
+      expertise: ["legal"],
+    },
+    status: "partially supported",
+  },
+  {
+    id: "p-13",
+    orgId: "org-11",
+    title: "Coding bootcamp for refugee youth",
+    category: "education",
+    type: "time-bound",
+    targetDate: "2027-06-30",
+    locationLabel: "Kisenyi, Kampala, Uganda",
+    lat: 0.32,
+    lng: 32.57,
+    description:
+      "Urban refugee youth in Kampala have skills but few entry points to the digital economy. We run a 9-month web development bootcamp for 40 learners. Graduates are placed with local tech employers.",
+    beneficiaries: "under 100",
+    needs: {
+      funding: { amount: 14000, currency: "USD" },
+      expertise: ["IT", "project management"],
+      equipment: "20 refurbished laptops",
+    },
+    status: "seeking support",
+  },
+  {
+    id: "p-14",
+    orgId: "org-11",
+    title: "Digital literacy for refugee mothers",
+    category: "education",
+    type: "ongoing",
+    locationLabel: "Kisenyi, Kampala, Uganda",
+    lat: 0.34,
+    lng: 32.58,
+    description:
+      "Refugee mothers often miss out on the basic digital skills their children acquire at school. We run evening drop-in sessions on phones, email and online safety. Around 50 women attend monthly.",
+    beneficiaries: "100–500",
+    needs: {
+      training: "Curriculum on online safety in Swahili",
+    },
+    status: "fully supported",
+  },
+  {
+    id: "p-15",
+    orgId: "org-12",
+    title: "Community kitchen for border-crossing families",
+    category: "food security",
+    type: "ongoing",
+    locationLabel: "Maicao, La Guajira, Colombia",
+    lat: 11.38,
+    lng: -72.23,
+    description:
+      "Venezuelan families arriving in Maicao often go days without a hot meal. Our kitchen serves 300 meals daily, run entirely by mothers from the community. Operations rely on monthly donations.",
+    beneficiaries: "500–2,000",
+    needs: {
+      funding: { amount: 5000, currency: "USD" },
+      equipment: "Industrial gas stove, food storage containers",
+    },
+    status: "partially supported",
+  },
+  {
+    id: "p-16",
+    orgId: "org-2",
+    title: "Child protection circle for new arrivals",
+    category: "protection",
+    type: "ongoing",
+    locationLabel: "Nakivale Reception Centre, Uganda",
+    lat: -0.79,
+    lng: 30.96,
+    description:
+      "Children arriving at the reception centre often wait weeks before formal services begin. Our circle offers structured play, basic counselling and quick referrals. Around 60 children pass through monthly.",
+    beneficiaries: "100–500",
+    needs: {
+      training: "Child safeguarding refresher",
+      partnership: true,
+    },
+    status: "seeking support",
+  },
+];
+
+export const categories: Category[] = [
+  "energy",
+  "water/WASH",
+  "education",
+  "healthcare",
+  "livelihoods",
+  "shelter",
+  "legal aid",
+  "protection",
+  "food security",
+];
+
+export const needsOptions = [
+  "funding",
+  "expertise",
+  "equipment",
+  "partnership",
+] as const;
+export type NeedFilter = (typeof needsOptions)[number];
+
+export const countries = Array.from(
+  new Set(organizations.map((o) => o.country)),
+).sort();
+
+export function orgById(id: string) {
+  return organizations.find((o) => o.id === id);
+}
+export function projectsByOrg(orgId: string) {
+  return projects.filter((p) => p.orgId === orgId);
+}
