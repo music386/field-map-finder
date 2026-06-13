@@ -446,7 +446,83 @@ export const organizations: Organization[] = [
       "local knowledge",
     ],
   },
+  {
+    id: "org-ngo-1",
+    name: "Horizon Relief International",
+    country: "Kenya",
+    region: "Nairobi County",
+    lat: -1.286389,
+    lng: 36.817223,
+    phone: "+254712900001",
+    description:
+      "International NGO partnering with refugee-led groups across East Africa to co-deliver health and livelihoods programmes.",
+    yearFounded: 2002,
+    orgType: "local NGO",
+    brings: ["ground delivery capacity", "established beneficiary relationships"],
+    entityKind: "NGO",
+  },
+  {
+    id: "org-ngo-2",
+    name: "Mediterranean Shelter Aid",
+    country: "Greece",
+    region: "Lesvos",
+    lat: 39.1,
+    lng: 26.55,
+    phone: "+306900900002",
+    description:
+      "Greek NGO operating reception support and winter shelter response across the Aegean islands.",
+    yearFounded: 2015,
+    orgType: "local NGO",
+    brings: ["ground delivery capacity", "volunteer network"],
+    entityKind: "NGO",
+  },
+  {
+    id: "org-ngo-3",
+    name: "Andes Migration Support",
+    country: "Colombia",
+    region: "Bogotá",
+    lat: 4.711,
+    lng: -74.0721,
+    phone: "+573000900003",
+    description:
+      "Colombian NGO running urban integration and case-management services for Venezuelan migrants.",
+    yearFounded: 2017,
+    orgType: "local NGO",
+    brings: ["established beneficiary relationships", "ground delivery capacity"],
+    entityKind: "NGO",
+  },
+  {
+    id: "org-ngo-4",
+    name: "Levant Health Partners",
+    country: "Jordan",
+    region: "Mafraq Governorate",
+    lat: 32.34,
+    lng: 36.21,
+    phone: "+962790900004",
+    description:
+      "Regional NGO running primary healthcare clinics in and around Zaatari and host communities.",
+    yearFounded: 2013,
+    orgType: "local NGO",
+    brings: ["ground delivery capacity", "established beneficiary relationships"],
+    entityKind: "NGO",
+  },
+  {
+    id: "org-ngo-5",
+    name: "Bay of Bengal Education Trust",
+    country: "Bangladesh",
+    region: "Chittagong Division",
+    lat: 21.43,
+    lng: 92.0,
+    phone: "+8801700900005",
+    description:
+      "Bangladeshi NGO running learning centres in the Rohingya response, partnering with refugee-led teaching circles.",
+    yearFounded: 2018,
+    orgType: "local NGO",
+    brings: ["ground delivery capacity", "volunteer network"],
+    entityKind: "NGO",
+  },
 ];
+
 
 export const projects: Project[] = [
   {
