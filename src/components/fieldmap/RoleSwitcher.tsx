@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 
-export type Role = "rlo" | "ngo" | "donor";
+export type Role = "seeking_donors" | "seeking_initiatives";
 
 export function RoleSwitcher({
   role,
@@ -10,9 +10,8 @@ export function RoleSwitcher({
   onChange: (r: Role) => void;
 }) {
   const roles: { id: Role; label: string }[] = [
-    { id: "rlo", label: "I'm an RLO" },
-    { id: "ngo", label: "I'm an NGO" },
-    { id: "donor", label: "I'm a Donor" },
+    { id: "seeking_donors", label: "I'm looking for Donors" },
+    { id: "seeking_initiatives", label: "I'm looking for Initiatives" },
   ];
   return (
     <div className="flex gap-1 rounded-md border bg-card p-1">
