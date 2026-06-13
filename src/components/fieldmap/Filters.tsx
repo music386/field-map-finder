@@ -84,7 +84,7 @@ export function Filters({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-48" align="start">
+        <PopoverContent className="z-[2000] w-48" align="start">
           <div className="space-y-2">
             {needsOptions.map((n) => {
               const checked = value.needs.includes(n);
