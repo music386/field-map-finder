@@ -256,7 +256,7 @@ export function ProjectCard({
 
           <section className="space-y-2">
             <h4 className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-              Other needs
+              Additional Resource Requirements
             </h4>
             <div className="flex flex-wrap gap-1.5">
               {project.needs.expertise?.map((e) => (
