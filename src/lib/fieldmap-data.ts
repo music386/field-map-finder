@@ -1183,3 +1183,7 @@ export function orgById(id: string) {
 export function projectsByOrg(orgId: string) {
   return projects.filter((p) => p.orgId === orgId);
 }
+
+export function orgKind(o: Organization | undefined | null): EntityKind {
+  return o?.entityKind ?? "RLO";
+}
