@@ -12,23 +12,34 @@ import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import type { Project } from "@/lib/fieldmap-data";
-import { orgById } from "@/lib/fieldmap-data";
+import { orgById, orgKind } from "@/lib/fieldmap-data";
 
-const pinIcon = L.divIcon({
-  className: "fieldmap-pin",
-  html: `<span style="display:block;height:14px;width:14px;border-radius:9999px;background:hsl(173 80% 30%);box-shadow:0 0 0 2px #fff,0 1px 3px rgba(0,0,0,0.3)"></span>`,
-  iconSize: [14, 14],
-  iconAnchor: [7, 7],
-});
+const PIN_COLORS = {
+  RLO: "hsl(152 65% 36%)", // green
+  NGO: "hsl(212 85% 48%)", // blue
+} as const;
+
+function makePinIcon(color: string) {
+  return L.divIcon({
+    className: "fieldmap-pin",
+    html: `<span style="display:block;height:14px;width:14px;border-radius:9999px;background:${color};box-shadow:0 0 0 2px #fff,0 1px 3px rgba(0,0,0,0.3)"></span>`,
+    iconSize: [14, 14],
+    iconAnchor: [7, 7],
+  });
+}
+
+const pinIconRLO = makePinIcon(PIN_COLORS.RLO);
+const pinIconNGO = makePinIcon(PIN_COLORS.NGO);
 
 function clusterIcon(cluster: { getChildCount: () => number }) {
   const count = cluster.getChildCount();
   return L.divIcon({
-    html: `<div style="display:flex;align-items:center;justify-content:center;height:36px;width:36px;border-radius:9999px;background:#fff;border:2px solid hsl(173 80% 30%);font:500 11px system-ui;color:#111;box-shadow:0 2px 6px rgba(0,0,0,0.15)">${count}</div>`,
+    html: `<div style="display:flex;align-items:center;justify-content:center;height:36px;width:36px;border-radius:9999px;background:#fff;border:2px solid hsl(152 65% 36%);font:500 11px system-ui;color:#111;box-shadow:0 2px 6px rgba(0,0,0,0.15)">${count}</div>`,
     className: "fieldmap-cluster",
     iconSize: [36, 36],
   });
 }
+
 
 function FlyTo({ project }: { project: Project | null }) {
   const map = useMap();
