@@ -34,12 +34,13 @@ function getPinIcon(kind: EntityKind, options: PinIconOptions = {}) {
   if (cached) return cached;
 
   const color = PIN_COLORS[kind];
+  const showPartnerRing = partner && kind !== "NGO";
   const icon = L.divIcon({
     className: `fieldmap-pin fieldmap-pin-${kind}${partner ? " is-partner" : ""}${selected ? " is-selected" : ""}`,
     html: `
       <span style="position:relative;display:block;height:30px;width:30px;">
         ${selected ? '<span style="position:absolute;inset:1px;border-radius:9999px;border:2px solid rgba(15,23,42,0.88);box-shadow:0 0 0 1px rgba(255,255,255,0.96);"></span>' : ""}
-        ${partner ? `<span style="position:absolute;inset:5px;border-radius:9999px;border:2px solid ${color};"></span>` : ""}
+        ${showPartnerRing ? `<span style="position:absolute;inset:5px;border-radius:9999px;border:2px solid ${color};"></span>` : ""}
         <span style="position:absolute;top:8px;left:8px;height:14px;width:14px;border-radius:9999px;background:${color};box-shadow:0 0 0 2px #fff,0 1px 3px rgba(0,0,0,0.3);"></span>
       </span>
     `,
