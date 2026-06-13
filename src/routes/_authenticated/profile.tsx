@@ -360,40 +360,126 @@ function OrgAccountEditor({
       </Card>
 
       <Card className="space-y-4 p-5">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-          Initiatives ({projects.length})
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            Initiatives ({projects.length})
+          </h2>
+          <p className="text-[11px] text-muted-foreground">Click to view full details</p>
+        </div>
         {projects.length === 0 ? (
           <p className="text-xs text-muted-foreground">No initiatives yet. Add one below.</p>
         ) : (
-          <ul className="space-y-2">
-            {projects.map((p) => (
-              <li key={p.id} className="flex items-start justify-between gap-2 rounded-md border bg-card p-3">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">{p.title}</span>
-                    <Badge variant="secondary" className="text-[10px] capitalize">{p.category}</Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground">{p.location_label}</p>
-                </div>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={async () => {
-                    if (!confirm("Delete this initiative?")) return;
-                    const { error } = await supabase.from("user_projects").delete().eq("id", p.id);
-                    if (error) toast.error(error.message); else { toast.success("Deleted"); reload(); }
-                  }}
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </Button>
-              </li>
-            ))}
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {projects.map((p) => {
+              const photo = categoryPhotos[p.category as Category];
+              return (
+                <li key={p.id}>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setActive(toFullProject(p, org?.claimed_seed_org_id ?? org?.id ?? "user-org"))
+                    }
+                    className="group flex w-full items-stretch gap-3 overflow-hidden rounded-md border bg-card text-left transition hover:shadow-md"
+                  >
+                    {photo && (
+                      <img
+                        src={photo}
+                        alt={p.category}
+                        className="h-20 w-20 shrink-0 object-cover"
+                      />
+                    )}
+                    <div className="flex min-w-0 flex-1 flex-col justify-center py-2 pr-2">
+                      <div className="flex items-center gap-2">
+                        <span className="truncate text-sm font-medium group-hover:text-primary">{p.title}</span>
+                      </div>
+                      <p className="truncate text-xs text-muted-foreground">{p.location_label}</p>
+                      <div className="mt-1 flex items-center gap-1.5">
+                        <Badge variant="secondary" className="text-[10px] capitalize">{p.category}</Badge>
+                        <Badge variant="outline" className="text-[10px] capitalize">{p.status}</Badge>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      aria-label="Delete"
+                      className="self-start p-2 text-muted-foreground hover:text-destructive"
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        if (!confirm("Delete this initiative?")) return;
+                        const { error } = await supabase.from("user_projects").delete().eq("id", p.id);
+                        if (error) toast.error(error.message); else { toast.success("Deleted"); reload(); }
+                      }}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         )}
         <NewProjectForm userId={userId} orgId={org?.id ?? null} onCreated={reload} />
       </Card>
+
+      <ProjectModal
+        project={active}
+        open={!!active}
+        onOpenChange={(o) => !o && setActive(null)}
+        perspectiveOrgId={org?.claimed_seed_org_id ?? null}
+      />
     </>
+  );
+}
+
+function toFullProject(p: UserProjectRow, orgId: string): Project {
+  // Prefer a matching seed project (demo accounts are linked to seed data)
+  const seed = seedProjects.find((s) => s.title === p.title);
+  if (seed) return seed;
+  return {
+    id: p.id,
+    orgId,
+    title: p.title,
+    category: p.category as Category,
+    type: (p.project_type as ProjectType) ?? "ongoing",
+    targetDate: p.target_date ?? undefined,
+    locationLabel: p.location_label,
+    lat: p.lat ?? 0,
+    lng: p.lng ?? 0,
+    description: p.description ?? "",
+    beneficiaries: (p.beneficiaries as BeneficiaryRange) ?? "under 100",
+    needs: (p.needs as Project["needs"]) ?? {},
+    status: (p.status as ProjectStatus) ?? "seeking support",
+  };
+}
+
+function ProjectModal({
+  project,
+  open,
+  onOpenChange,
+  perspectiveOrgId,
+}: {
+  project: Project | null;
+  open: boolean;
+  onOpenChange: (o: boolean) => void;
+  perspectiveOrgId: string | null;
+}) {
+  if (!project) return null;
+  return (
+    <div className={`fixed inset-0 z-[1500] ${open ? "" : "pointer-events-none"}`} aria-hidden={!open}>
+      <button
+        type="button"
+        onClick={() => onOpenChange(false)}
+        className={`absolute inset-0 bg-black/40 transition-opacity ${open ? "opacity-100" : "opacity-0"}`}
+        aria-label="Close overlay"
+      />
+      <ProjectCard
+        project={project}
+        perspectiveOrgId={perspectiveOrgId}
+        open={open}
+        onOpenChange={onOpenChange}
+        role="seeking_donors"
+        onOrgClick={() => {}}
+      />
+    </div>
   );
 }
 
