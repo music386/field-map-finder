@@ -6,8 +6,11 @@ import { orgById, orgKind, type Project } from "@/lib/fieldmap-data";
 import { categoryPhotos, orgColor, orgInitials } from "@/lib/category-photos";
 import { deriveSubmission } from "@/lib/submissions";
 import { SidePanel } from "./SidePanel";
+import { InAppMessageButton } from "./InAppMessageButton";
 import type { Role } from "./RoleSwitcher";
 import { MessageSquare } from "lucide-react";
+import { useAuth } from "@/lib/use-auth";
+import { supabase } from "@/integrations/supabase/client";
 
 
 function buildSmsLink(phone: string, body: string) {
