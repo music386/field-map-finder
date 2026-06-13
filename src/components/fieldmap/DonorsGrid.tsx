@@ -312,18 +312,12 @@ export function DonorsGrid() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 rounded-md border bg-muted/40 p-2 text-[11px]">
-                    <div>
-                      <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
-                        Ticket size
-                      </div>
-                      <div className="font-medium">{d.ticketSize}</div>
-                    </div>
-                    <div>
-                      <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                  <div className="rounded-md border bg-muted/40 p-2 text-[11px]">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
                         Recently funded
-                      </div>
-                      <div className="font-medium">{d.recentlyFunded} initiatives</div>
+                      </span>
+                      <span className="font-medium">{d.recentlyFunded} initiatives</span>
                     </div>
                   </div>
 
