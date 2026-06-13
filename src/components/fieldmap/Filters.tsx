@@ -116,13 +116,13 @@ export function Filters({
           onChange({ ...value, type: v as FilterState["type"] })
         }
       >
-        <SelectTrigger className="h-8 w-[140px] text-xs">
+        <SelectTrigger className="h-8 w-[180px] text-xs">
           <SelectValue />
         </SelectTrigger>
         <SelectContent className="z-[2000]">
-          <SelectItem value="both">Any project type</SelectItem>
-          <SelectItem value="time-bound">Time-bound</SelectItem>
-          <SelectItem value="ongoing">Ongoing mission</SelectItem>
+          <SelectItem value="both">Type: project & mission</SelectItem>
+          <SelectItem value="time-bound">Type: project only</SelectItem>
+          <SelectItem value="ongoing">Type: mission only</SelectItem>
         </SelectContent>
       </Select>
 

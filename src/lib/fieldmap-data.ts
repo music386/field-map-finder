@@ -86,6 +86,7 @@ export interface Project {
   };
   status: ProjectStatus;
   photos?: string[];
+  partnerOrgIds?: string[]; // co-implementing orgs (NGO↔RLO partnerships)
 }
 
 
@@ -562,6 +563,7 @@ export const projects: Project[] = [
       partnership: true,
     },
     status: "partially supported",
+    partnerOrgIds: ["org-ngo-1"],
   },
   {
     id: "p-3",
@@ -1130,6 +1132,7 @@ export const projects: Project[] = [
       partnership: true,
     },
     status: "partially supported",
+    partnerOrgIds: ["org-10"],
   },
   {
     id: "p-ngo-5",
@@ -1149,6 +1152,7 @@ export const projects: Project[] = [
       training: "Teacher training for 24 volunteer instructors",
     },
     status: "seeking support",
+    partnerOrgIds: ["org-6"],
   },
 ];
 
