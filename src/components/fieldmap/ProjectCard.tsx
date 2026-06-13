@@ -18,13 +18,7 @@ function buildSmsLink(phone: string, body: string) {
 function actionFor(role: Role, project: Project, orgName: string) {
   const senderLine =
     "\n\n— Sent via FieldMap. Reply to this number with your contact details.";
-  if (role === "ngo") {
-    return {
-      label: "Start conversation",
-      body: `Hi ${orgName}, I'm reaching out from an NGO about your initiative "${project.title}". We'd like to explore a partnership.${senderLine}`,
-    };
-  }
-  if (role === "donor") {
+  if (role === "seeking_initiatives") {
     const fund = project.needs.funding;
     const amount = fund
       ? ` (${fund.currency} ${fund.amount.toLocaleString()})`
@@ -35,8 +29,8 @@ function actionFor(role: Role, project: Project, orgName: string) {
     };
   }
   return {
-    label: "Contact this RLO",
-    body: `Hi ${orgName}, I came across "${project.title}" on FieldMap and would like to connect.${senderLine}`,
+    label: "Start conversation",
+    body: `Hi ${orgName}, I'm reaching out about your initiative "${project.title}". We'd like to explore a partnership or collaboration.${senderLine}`,
   };
 }
 
