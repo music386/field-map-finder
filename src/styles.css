@@ -138,6 +138,14 @@
     border-color: var(--color-border);
   }
 
+  .leaflet-container .leaflet-marker-icon:focus,
+  .leaflet-container .leaflet-marker-icon:focus-visible,
+  .leaflet-container .leaflet-marker-shadow:focus,
+  .leaflet-container .leaflet-marker-shadow:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
