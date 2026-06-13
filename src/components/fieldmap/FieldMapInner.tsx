@@ -184,12 +184,17 @@ export function FieldMapInner({
       style={{ background: "hsl(205 60% 88%)" }}
       scrollWheelZoom
     >
-      <LabelsPane />
+      <DetailPane />
+      <TileLayer
+        pane="detail"
+        attribution='&copy; OpenStreetMap &copy; CARTO'
+        url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
+      />
       <TileLayer
         pane="labels"
-        attribution='&copy; OpenStreetMap &copy; CARTO'
         url="https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png"
       />
+
 
 
       {countries && (
