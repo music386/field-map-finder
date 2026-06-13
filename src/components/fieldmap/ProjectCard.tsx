@@ -20,7 +20,7 @@ function actionFor(role: Role, project: Project, orgName: string) {
     "\n\n— Sent via FieldMap. Reply to this number with your contact details.";
   if (role === "ngo") {
     return {
-      label: "Propose partnership",
+      label: "Start conversation",
       body: `Hi ${orgName}, I'm reaching out from an NGO about your initiative "${project.title}". We'd like to explore a partnership.${senderLine}`,
     };
   }
