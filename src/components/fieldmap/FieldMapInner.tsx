@@ -108,7 +108,7 @@ export function FieldMapInner({
   focused,
 }: {
   projects: Project[];
-  onSelect: (p: Project) => void;
+  onSelect: (p: Project, perspectiveOrgId?: string) => void;
   focused: Project | null;
 }) {
   const center = useMemo<[number, number]>(() => [10, 25], []);
