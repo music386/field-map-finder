@@ -160,7 +160,7 @@ export const ensureDemoAccount = createServerFn({ method: "POST" })
               lng: p.lng,
               description: p.description,
               beneficiaries: p.beneficiaries ?? null,
-              needs: p.needs as unknown as Record<string, unknown>,
+              needs: p.needs as unknown as never,
               status: p.status ?? "seeking support",
             })),
           );
