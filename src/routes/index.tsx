@@ -77,9 +77,11 @@ function HomePage() {
     <div className="flex h-screen flex-col">
       <header className="flex items-center justify-between gap-4 border-b bg-card px-4 py-2.5">
         <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[hsl(var(--pin))] text-white">
-            <MapPin className="h-4 w-4" />
-          </div>
+          <img
+            src={logo}
+            alt="FieldMap logo"
+            className="h-8 w-8 rounded-md object-contain"
+          />
           <div>
             <h1 className="text-sm font-semibold leading-none">FieldMap</h1>
             <p className="text-[11px] text-muted-foreground">
