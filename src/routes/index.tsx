@@ -33,7 +33,7 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const [role, setRole] = useState<Role>("ngo");
+  const [role, setRole] = useState<Role>("seeking_initiatives");
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
   const [selected, setSelected] = useState<Project | null>(null);
   const [projectOpen, setProjectOpen] = useState(false);
