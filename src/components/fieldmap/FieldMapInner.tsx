@@ -138,21 +138,21 @@ export function FieldMapInner({
     const name = (feature?.properties as { name?: string } | undefined)?.name;
     const c = (name && countryCounts[name]) || 0;
     if (!c) {
+      // Neutral land fill so highlighted countries don't look like overlays
       return {
-        fillColor: "transparent",
-        fillOpacity: 0,
-        color: "transparent",
-        weight: 0,
+        fillColor: "hsl(40 20% 92%)",
+        fillOpacity: 1,
+        color: "hsl(40 10% 75%)",
+        weight: 0.5,
       };
     }
-    // Green ramp keyed to relative count
     const t = c / maxCount;
-    const lightness = 78 - t * 32; // 78% -> 46%
+    const lightness = 72 - t * 32; // 72% -> 40%
     return {
       fillColor: `hsl(152 65% ${lightness}%)`,
-      fillOpacity: 0.45,
-      color: "hsl(152 65% 30%)",
-      weight: 1,
+      fillOpacity: 1,
+      color: "hsl(152 65% 25%)",
+      weight: 0.8,
     };
   }
 
