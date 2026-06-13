@@ -134,6 +134,7 @@ function HomePage() {
             />
             <ProjectCard
               project={selected}
+              perspectiveOrgId={perspectiveOrgId}
               open={projectOpen}
               onOpenChange={setProjectOpen}
               role={role}
