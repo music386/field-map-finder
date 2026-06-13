@@ -35,43 +35,10 @@ const donorTypes: DonorType[] = [
   "Individual",
 ];
 
-const ticketBuckets = [
-  { id: "all", label: "Any ticket size" },
-  { id: "small", label: "Up to $250k" },
-  { id: "mid", label: "$250k – $2M" },
-  { id: "large", label: "$2M+" },
-] as const;
-
-type TicketBucket = (typeof ticketBuckets)[number]["id"];
-
-// Parse the upper bound (USD/EUR roughly equivalent) from a ticket-size string.
-function ticketUpperBound(s: string): number {
-  const nums = Array.from(s.matchAll(/([\d.]+)\s*([kKmM])/g)).map((m) => {
-    const n = parseFloat(m[1]);
-    return m[2].toLowerCase() === "m" ? n * 1_000_000 : n * 1_000;
-  });
-  return nums.length ? Math.max(...nums) : 0;
-}
-
-function matchesTicket(s: string, bucket: TicketBucket) {
-  if (bucket === "all") return true;
-  const upper = ticketUpperBound(s);
-  if (bucket === "small") return upper <= 250_000;
-  if (bucket === "mid") return upper > 250_000 && upper <= 2_000_000;
-  return upper > 2_000_000;
-}
-
-export function DonorsGrid() {
-  const allRegions = useMemo(
-    () => Array.from(new Set(donors.flatMap((d) => d.regions))).sort(),
-    [],
-  );
-
   const [query, setQuery] = useState("");
   const [type, setType] = useState<DonorType | "all">("all");
   const [interests, setInterests] = useState<Category[]>([]);
   const [regions, setRegions] = useState<string[]>([]);
-  const [ticket, setTicket] = useState<TicketBucket>("all");
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -86,20 +53,18 @@ export function DonorsGrid() {
         )
       )
         return false;
-      if (!matchesTicket(d.ticketSize, ticket)) return false;
       if (q) {
         const hay = `${d.name} ${d.about} ${d.location}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;
     });
-  }, [query, type, interests, regions, ticket]);
+  }, [query, type, interests, regions]);
 
   const hasActive =
     type !== "all" ||
     interests.length > 0 ||
     regions.length > 0 ||
-    ticket !== "all" ||
     query.trim() !== "";
 
   function clearAll() {
@@ -107,7 +72,6 @@ export function DonorsGrid() {
     setType("all");
     setInterests([]);
     setRegions([]);
-    setTicket("all");
   }
 
   return (
