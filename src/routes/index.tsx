@@ -8,6 +8,7 @@ import {
 } from "@/components/fieldmap/Filters";
 import { ProjectCard } from "@/components/fieldmap/ProjectCard";
 import { OrgPanel } from "@/components/fieldmap/OrgPanel";
+import { DonorsGrid } from "@/components/fieldmap/DonorsGrid";
 import { RoleSwitcher, type Role } from "@/components/fieldmap/RoleSwitcher";
 import { projects as allProjects, type Project, orgById, orgKind } from "@/lib/fieldmap-data";
 import logo from "@/assets/fieldmap-logo.png";
@@ -111,32 +112,40 @@ function HomePage() {
       </header>
 
 
-      <Filters
-        value={filters}
-        onChange={setFilters}
-        resultCount={visible.length}
-      />
+      {role === "seeking_donors" ? (
+        <div className="relative flex-1 overflow-hidden">
+          <DonorsGrid />
+        </div>
+      ) : (
+        <>
+          <Filters
+            value={filters}
+            onChange={setFilters}
+            resultCount={visible.length}
+          />
 
-      <div className="relative flex-1 overflow-hidden">
-        <FieldMap
-          projects={visible}
-          onSelect={openProject}
-          focused={projectOpen ? selected : null}
-        />
-        <ProjectCard
-          project={selected}
-          open={projectOpen}
-          onOpenChange={setProjectOpen}
-          role={role}
-          onOrgClick={openOrg}
-        />
-        <OrgPanel
-          orgId={orgId}
-          open={orgOpen}
-          onOpenChange={setOrgOpen}
-          onProjectClick={openProject}
-        />
-      </div>
+          <div className="relative flex-1 overflow-hidden">
+            <FieldMap
+              projects={visible}
+              onSelect={openProject}
+              focused={projectOpen ? selected : null}
+            />
+            <ProjectCard
+              project={selected}
+              open={projectOpen}
+              onOpenChange={setProjectOpen}
+              role={role}
+              onOrgClick={openOrg}
+            />
+            <OrgPanel
+              orgId={orgId}
+              open={orgOpen}
+              onOpenChange={setOrgOpen}
+              onProjectClick={openProject}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }
