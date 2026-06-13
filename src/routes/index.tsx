@@ -8,9 +8,12 @@ import {
 } from "@/components/fieldmap/Filters";
 import { ProjectCard } from "@/components/fieldmap/ProjectCard";
 import { OrgPanel } from "@/components/fieldmap/OrgPanel";
+import { PartnershipsPanel } from "@/components/fieldmap/PartnershipsPanel";
 import { DonorsGrid } from "@/components/fieldmap/DonorsGrid";
 import { RoleSwitcher, type Role } from "@/components/fieldmap/RoleSwitcher";
 import { projects as allProjects, type Project, orgById, orgKind } from "@/lib/fieldmap-data";
+import { Button } from "@/components/ui/button";
+import { Handshake } from "lucide-react";
 import logo from "@/assets/fieldmap-logo.png";
 
 export const Route = createFileRoute("/")({
@@ -41,6 +44,7 @@ function HomePage() {
   const [perspectiveOrgId, setPerspectiveOrgId] = useState<string | null>(null);
   const [orgId, setOrgId] = useState<string | null>(null);
   const [orgOpen, setOrgOpen] = useState(false);
+  const [partnershipsOpen, setPartnershipsOpen] = useState(false);
 
   const visible = useMemo(() => {
     return allProjects.filter((p) => {
@@ -109,6 +113,15 @@ function HomePage() {
               NGO
             </span>
           </div>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setPartnershipsOpen(true)}
+            className="gap-1.5 border-[hsl(212_85%_48%)]/40 text-[hsl(212_85%_48%)] hover:bg-[hsl(212_85%_48%)]/10 hover:text-[hsl(212_85%_48%)]"
+          >
+            <Handshake className="h-3.5 w-3.5" />
+            Recent partnerships
+          </Button>
           <RoleSwitcher role={role} onChange={setRole} />
         </div>
       </header>
@@ -149,6 +162,18 @@ function HomePage() {
           </div>
         </>
       )}
+      <PartnershipsPanel
+        open={partnershipsOpen}
+        onOpenChange={setPartnershipsOpen}
+        onProjectClick={(p, persp) => {
+          setPartnershipsOpen(false);
+          openProject(p, persp);
+        }}
+        onOrgClick={(id) => {
+          setPartnershipsOpen(false);
+          openOrg(id);
+        }}
+      />
     </div>
   );
 }

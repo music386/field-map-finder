@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import type { Project } from "@/lib/fieldmap-data";
 
 const InnerMap = lazy(() =>
@@ -10,21 +10,19 @@ export function FieldMap(props: {
   onSelect: (p: Project, perspectiveOrgId?: string) => void;
   focused: Project | null;
 }) {
-  if (typeof window === "undefined") {
-    return (
-      <div className="flex h-full w-full items-center justify-center bg-muted text-sm text-muted-foreground">
-        Loading map…
-      </div>
-    );
-  }
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const fallback = (
+    <div className="flex h-full w-full items-center justify-center bg-muted text-sm text-muted-foreground">
+      Loading map…
+    </div>
+  );
+
+  if (!mounted) return fallback;
+
   return (
-    <Suspense
-      fallback={
-        <div className="flex h-full w-full items-center justify-center bg-muted text-sm text-muted-foreground">
-          Loading map…
-        </div>
-      }
-    >
+    <Suspense fallback={fallback}>
       <InnerMap {...props} />
     </Suspense>
   );
