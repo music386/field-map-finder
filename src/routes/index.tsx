@@ -44,6 +44,7 @@ function HomePage() {
   const [perspectiveOrgId, setPerspectiveOrgId] = useState<string | null>(null);
   const [orgId, setOrgId] = useState<string | null>(null);
   const [orgOpen, setOrgOpen] = useState(false);
+  const [partnershipsOpen, setPartnershipsOpen] = useState(false);
 
   const visible = useMemo(() => {
     return allProjects.filter((p) => {
