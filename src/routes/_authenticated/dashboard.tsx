@@ -35,9 +35,16 @@ type ThreadRow = {
 
 function DashboardPage() {
   const { user, role, loading } = useAuth();
-  const [tab, setTab] = useState<"sent" | "received" | "threads">("sent");
+  const [tab, setTab] = useState<"org" | "sent" | "received" | "threads">("org");
 
   if (loading || !user) return <Shell><p className="text-sm text-muted-foreground">Loading…</p></Shell>;
+
+  const tabs: { id: typeof tab; label: string }[] = [
+    { id: "org", label: role === "donor" ? "My profile" : "My org" },
+    { id: "sent", label: "I contacted" },
+    { id: "received", label: "Contacted me" },
+    { id: "threads", label: "Messages" },
+  ];
 
   return (
     <Shell>
@@ -47,22 +54,303 @@ function DashboardPage() {
           <p className="text-xs uppercase tracking-wide text-muted-foreground">{role ?? "account"}</p>
         </div>
         <div className="flex gap-1 rounded-md border bg-card p-1 text-xs">
-          {(["sent","received","threads"] as const).map((k) => (
+          {tabs.map((t) => (
             <button
-              key={k}
-              onClick={() => setTab(k)}
-              className={`rounded px-2 py-1 capitalize ${tab === k ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-accent"}`}
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`rounded px-2 py-1 ${tab === t.id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-accent"}`}
             >
-              {k === "sent" ? "I contacted" : k === "received" ? "Contacted me" : "Messages"}
+              {t.label}
             </button>
           ))}
         </div>
       </div>
 
+      {tab === "org" && <OrgPanel userId={user.id} role={role} />}
       {tab === "sent" && <OutreachList userId={user.id} direction="sent" />}
       {tab === "received" && <OutreachList userId={user.id} direction="received" />}
       {tab === "threads" && <ThreadsList userId={user.id} />}
     </Shell>
+  );
+}
+
+type UserOrg = {
+  id: string;
+  name: string;
+  entity_kind: "RLO" | "NGO";
+  country: string | null;
+  region: string | null;
+  description: string | null;
+  claimed_seed_org_id: string | null;
+};
+
+type UserProject = {
+  id: string;
+  title: string;
+  category: string;
+  project_type: string;
+  status: string;
+  location_label: string;
+};
+
+type SmsRow = {
+  id: string;
+  title: string;
+  category: string;
+  project_type: "time-bound" | "ongoing";
+  target_date: string | null;
+  location_label: string;
+  lat: number;
+  lng: number;
+  description: string | null;
+  beneficiaries: string | null;
+  contact_phone: string | null;
+  needs: Record<string, unknown>;
+  suggested_seed_org_id: string | null;
+  claimed_by_user_id: string | null;
+};
+
+type DonorProfile = {
+  organisation_name: string | null;
+  donor_kind: string | null;
+  hq_country: string | null;
+  blurb: string | null;
+  interests: string[];
+  regions: string[];
+  recently_funded: number;
+};
+
+function OrgPanel({ userId, role }: { userId: string; role: string | null }) {
+  const [org, setOrg] = useState<UserOrg | null>(null);
+  const [projects, setProjects] = useState<UserProject[]>([]);
+  const [donor, setDonor] = useState<DonorProfile | null>(null);
+  const [sms, setSms] = useState<SmsRow[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  async function refresh() {
+    setLoading(true);
+    if (role === "donor") {
+      const { data } = await supabase
+        .from("donor_profiles")
+        .select("organisation_name, donor_kind, hq_country, blurb, interests, regions, recently_funded")
+        .eq("id", userId)
+        .maybeSingle();
+      setDonor((data as DonorProfile) ?? null);
+    } else {
+      const { data: orgRow } = await supabase
+        .from("user_orgs")
+        .select("id, name, entity_kind, country, region, description, claimed_seed_org_id")
+        .eq("owner_id", userId)
+        .maybeSingle();
+      setOrg((orgRow as UserOrg) ?? null);
+      const { data: projRows } = await supabase
+        .from("user_projects")
+        .select("id, title, category, project_type, status, location_label")
+        .eq("owner_id", userId)
+        .order("created_at", { ascending: false });
+      setProjects((projRows as UserProject[]) ?? []);
+      if (role === "rlo") {
+        const { data: smsRows } = await supabase
+          .from("sms_submissions")
+          .select("*")
+          .is("claimed_by_user_id", null)
+          .order("submitted_at", { ascending: false });
+        setSms((smsRows as SmsRow[]) ?? []);
+      }
+    }
+    setLoading(false);
+  }
+
+  useEffect(() => { refresh(); }, [userId, role]);
+
+  if (loading) return <p className="text-sm text-muted-foreground">Loading…</p>;
+
+  if (role === "donor") {
+    if (!donor) return <Card className="p-6 text-sm text-muted-foreground">No donor profile yet.</Card>;
+    return (
+      <div className="space-y-4">
+        <Card className="space-y-2 p-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">{donor.organisation_name}</h2>
+            <Badge variant="secondary" className="text-[10px] uppercase">{donor.donor_kind}</Badge>
+          </div>
+          <p className="text-xs text-muted-foreground">{donor.hq_country}</p>
+          {donor.blurb && <p className="text-sm">{donor.blurb}</p>}
+          <div className="flex flex-wrap gap-1 pt-1">
+            {donor.interests.map((i) => (
+              <Badge key={i} variant="outline" className="text-[10px]">{i}</Badge>
+            ))}
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Regions: {donor.regions.join(", ")} · {donor.recently_funded} initiatives funded recently
+          </p>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {org ? (
+        <Card className="space-y-2 p-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">{org.name}</h2>
+            <Badge variant="secondary" className="text-[10px] uppercase">{org.entity_kind}</Badge>
+          </div>
+          <p className="text-xs text-muted-foreground">{org.region}{org.region && org.country ? ", " : ""}{org.country}</p>
+          {org.description && <p className="text-sm">{org.description}</p>}
+        </Card>
+      ) : (
+        <Card className="p-6 text-sm text-muted-foreground">No organisation yet.</Card>
+      )}
+
+      <section className="space-y-2">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          Your {projects.length === 1 ? "initiative" : "initiatives"} ({projects.length})
+        </h3>
+        {projects.length === 0 ? (
+          <Card className="p-4 text-sm text-muted-foreground">No initiatives yet.</Card>
+        ) : (
+          <ul className="space-y-2">
+            {projects.map((p) => (
+              <li key={p.id}>
+                <Card className="space-y-1 p-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm font-medium">{p.title}</span>
+                    <Badge variant="outline" className="text-[10px] uppercase">{p.project_type}</Badge>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                    <span>{p.location_label}</span>
+                    <span>·</span>
+                    <span>{p.category}</span>
+                    <span>·</span>
+                    <span>{p.status}</span>
+                  </div>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      {role === "rlo" && (
+        <section className="space-y-2">
+          <div>
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Unclaimed SMS submissions ({sms.length})
+            </h3>
+            <p className="text-xs text-muted-foreground">
+              Submissions sent to FieldMap by SMS (without an account). Claim one to add it to your org's initiatives.
+            </p>
+          </div>
+          {sms.length === 0 ? (
+            <Card className="p-4 text-sm text-muted-foreground">Nothing pending.</Card>
+          ) : (
+            <ul className="space-y-2">
+              {sms.map((s) => (
+                <SmsClaimCard
+                  key={s.id}
+                  sms={s}
+                  orgId={org?.id ?? null}
+                  userId={userId}
+                  suggested={org?.claimed_seed_org_id === s.suggested_seed_org_id}
+                  onClaimed={refresh}
+                />
+              ))}
+            </ul>
+          )}
+        </section>
+      )}
+    </div>
+  );
+}
+
+function SmsClaimCard({
+  sms,
+  orgId,
+  userId,
+  suggested,
+  onClaimed,
+}: {
+  sms: SmsRow;
+  orgId: string | null;
+  userId: string;
+  suggested: boolean;
+  onClaimed: () => void;
+}) {
+  const [busy, setBusy] = useState(false);
+
+  async function claim() {
+    if (!orgId) {
+      toast.error("Create your org first before claiming submissions.");
+      return;
+    }
+    setBusy(true);
+    const inserted = await supabase
+      .from("user_projects")
+      .insert({
+        owner_id: userId,
+        org_id: orgId,
+        title: sms.title,
+        category: sms.category,
+        project_type: sms.project_type,
+        target_date: sms.target_date,
+        location_label: sms.location_label,
+        lat: sms.lat,
+        lng: sms.lng,
+        description: sms.description,
+        beneficiaries: sms.beneficiaries,
+        needs: sms.needs as never,
+        status: "seeking support",
+      })
+      .select("id")
+      .single();
+    if (inserted.error || !inserted.data) {
+      setBusy(false);
+      toast.error(inserted.error?.message ?? "Could not claim submission");
+      return;
+    }
+    const updated = await supabase
+      .from("sms_submissions")
+      .update({
+        claimed_by_user_id: userId,
+        claimed_project_id: inserted.data.id,
+        claimed_at: new Date().toISOString(),
+      })
+      .eq("id", sms.id);
+    setBusy(false);
+    if (updated.error) { toast.error(updated.error.message); return; }
+    toast.success("Submission claimed and added to your initiatives.");
+    onClaimed();
+  }
+
+  return (
+    <li>
+      <Card className="space-y-2 p-3">
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <p className="text-sm font-medium">{sms.title}</p>
+            <p className="text-xs text-muted-foreground">{sms.location_label}</p>
+          </div>
+          <div className="flex flex-col items-end gap-1">
+            <Badge variant="outline" className="text-[10px] uppercase">SMS</Badge>
+            {suggested && (
+              <Badge className="text-[10px] uppercase">Matches your org</Badge>
+            )}
+          </div>
+        </div>
+        {sms.description && <p className="text-xs text-muted-foreground">{sms.description}</p>}
+        <div className="flex items-center justify-between gap-2 pt-1">
+          <span className="text-[11px] text-muted-foreground">
+            {sms.category} · {sms.project_type}
+            {sms.beneficiaries ? ` · ${sms.beneficiaries}` : ""}
+          </span>
+          <Button size="sm" onClick={claim} disabled={busy}>
+            {busy ? "…" : "Claim"}
+          </Button>
+        </div>
+      </Card>
+    </li>
   );
 }
 

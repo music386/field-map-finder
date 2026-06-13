@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import type { AppRole } from "@/lib/use-auth";
+import { DEMO_ACCOUNTS, ensureDemoAccount, type DemoRole } from "@/lib/demo-auth.functions";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -56,9 +57,50 @@ function AuthPage() {
     }
   }
 
+  async function loginAsDemo(role: DemoRole) {
+    setLoading(true);
+    try {
+      const creds = await ensureDemoAccount({ data: { role } });
+      const { error } = await supabase.auth.signInWithPassword({
+        email: creds.email,
+        password: creds.password,
+      });
+      if (error) throw error;
+      toast.success(`Signed in as ${DEMO_ACCOUNTS[role].label}`);
+      navigate({ to: "/dashboard" });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Demo sign-in failed";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/30 p-4">
       <Card className="w-full max-w-md p-6">
+        <div className="mb-5 rounded-md border border-dashed bg-muted/40 p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Try a demo account
+          </p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Pre-loaded with real map data so you can explore the dashboard.
+          </p>
+          <div className="mt-3 grid gap-2">
+            {(Object.keys(DEMO_ACCOUNTS) as DemoRole[]).map((r) => (
+              <button
+                key={r}
+                type="button"
+                disabled={loading}
+                onClick={() => loginAsDemo(r)}
+                className="flex items-center justify-between rounded-md border bg-background px-3 py-2 text-left text-xs transition hover:bg-accent disabled:opacity-50"
+              >
+                <span className="font-semibold">{DEMO_ACCOUNTS[r].label}</span>
+                <span className="text-muted-foreground">{DEMO_ACCOUNTS[r].sublabel}</span>
+              </button>
+            ))}
+          </div>
+        </div>
         <div className="mb-5">
           <h1 className="text-xl font-semibold">
             {mode === "signup" ? "Create your FieldMap account" : "Sign in to FieldMap"}
