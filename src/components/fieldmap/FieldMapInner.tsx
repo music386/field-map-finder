@@ -166,10 +166,13 @@ export function FieldMapInner({
       style={{ background: "hsl(205 60% 88%)" }}
       scrollWheelZoom
     >
+      <LabelsPane />
       <TileLayer
+        pane="labels"
         attribution='&copy; OpenStreetMap &copy; CARTO'
         url="https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png"
       />
+
 
       {countries && (
         <GeoJSON
