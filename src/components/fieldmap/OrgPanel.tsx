@@ -26,6 +26,9 @@ export function OrgPanel({
   const org = orgById(orgId);
   if (!org) return null;
   const orgProjects = projectsByOrg(orgId);
+  const collaborations = allProjects.filter(
+    (p) => p.orgId !== orgId && (p.partnerOrgIds ?? []).includes(orgId),
+  );
 
   return (
     <SidePanel open={open} onClose={() => onOpenChange(false)}>
