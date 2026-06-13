@@ -239,7 +239,7 @@ export function ProjectCard({
             </p>
           </div>
         </div>
-      </SheetContent>
-    </Sheet>
+      </div>
+    </SidePanel>
   );
 }
