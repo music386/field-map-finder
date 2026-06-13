@@ -185,17 +185,34 @@ export function ProjectCard({
 
           <Separator />
 
+          {funding && (
+            <section className="space-y-2 rounded-md border border-[hsl(152_65%_36%)]/30 bg-[hsl(152_65%_36%)]/5 p-3">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-semibold uppercase tracking-wide text-muted-foreground">
+                  Funding
+                </span>
+                <span className="font-medium">{fundingPct}% raised</span>
+              </div>
+              <Progress
+                value={fundingPct}
+                className="h-2 [&>div]:bg-[hsl(152_65%_36%)]"
+              />
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span>
+                  {funding.currency} {(raised ?? 0).toLocaleString()} raised
+                </span>
+                <span>
+                  of {funding.currency} {funding.amount.toLocaleString()}
+                </span>
+              </div>
+            </section>
+          )}
+
           <section className="space-y-2">
             <h4 className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-              What this initiative needs
+              Other needs
             </h4>
             <div className="flex flex-wrap gap-1.5">
-              {project.needs.funding && (
-                <Badge variant="default">
-                  Funding: {project.needs.funding.currency}{" "}
-                  {project.needs.funding.amount.toLocaleString()}
-                </Badge>
-              )}
               {project.needs.expertise?.map((e) => (
                 <Badge key={e} variant="secondary" className="capitalize">
                   Expertise: {e}
@@ -214,8 +231,17 @@ export function ProjectCard({
               {project.needs.partnership && (
                 <Badge variant="secondary">Partnership with NGO</Badge>
               )}
+              {!project.needs.expertise?.length &&
+                !project.needs.equipment &&
+                !project.needs.training &&
+                !project.needs.partnership && (
+                  <span className="text-xs text-muted-foreground">
+                    No additional needs listed.
+                  </span>
+                )}
             </div>
           </section>
+
 
           <section className="space-y-1">
             <h4 className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
