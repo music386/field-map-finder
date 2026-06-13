@@ -14,6 +14,7 @@ import { RoleSwitcher, type Role } from "@/components/fieldmap/RoleSwitcher";
 import { projects as allProjects, type Project, orgById, orgKind } from "@/lib/fieldmap-data";
 import { Button } from "@/components/ui/button";
 import { Handshake } from "lucide-react";
+import { HeaderUserMenu } from "@/components/HeaderUserMenu";
 import logo from "@/assets/fieldmap-logo.png";
 
 export const Route = createFileRoute("/")({
