@@ -61,6 +61,9 @@ export function HeaderUserMenu() {
           <Link to="/dashboard">Dashboard</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
+          <Link to="/messages">Messages</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
           <Link to="/profile">My profile</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
