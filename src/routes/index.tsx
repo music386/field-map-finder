@@ -38,6 +38,7 @@ function HomePage() {
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
   const [selected, setSelected] = useState<Project | null>(null);
   const [projectOpen, setProjectOpen] = useState(false);
+  const [perspectiveOrgId, setPerspectiveOrgId] = useState<string | null>(null);
   const [orgId, setOrgId] = useState<string | null>(null);
   const [orgOpen, setOrgOpen] = useState(false);
 
