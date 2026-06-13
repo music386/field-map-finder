@@ -123,12 +123,23 @@ export function ProjectCard({
             {project.category}
           </Badge>
           <Badge
-            className="absolute right-3 top-3"
+            className={
+              "absolute right-3 top-3 " +
+              (kind === "NGO"
+                ? "bg-[hsl(212_85%_48%)] text-white hover:bg-[hsl(212_85%_44%)]"
+                : "bg-[hsl(152_65%_36%)] text-white hover:bg-[hsl(152_65%_32%)]")
+            }
+          >
+            {kind}
+          </Badge>
+          <Badge
+            className="absolute right-3 top-11"
             variant={submission.type === "Project" ? "default" : "outline"}
           >
             {submission.type}
           </Badge>
         </div>
+
 
         <div className="flex items-center gap-3 border-b px-4 py-3">
           <button
