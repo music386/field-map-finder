@@ -53,20 +53,35 @@ function Field({
 
 export function ProjectCard({
   project,
+  perspectiveOrgId,
   open,
   onOpenChange,
   role,
   onOrgClick,
 }: {
   project: Project | null;
+  perspectiveOrgId?: string | null;
   open: boolean;
   onOpenChange: (o: boolean) => void;
   role: Role;
   onOrgClick: (orgId: string) => void;
 }) {
   if (!project) return null;
-  const org = orgById(project.orgId);
-  if (!org) return null;
+  const leadOrg = orgById(project.orgId);
+  if (!leadOrg) return null;
+  const perspectiveOrg =
+    (perspectiveOrgId && orgById(perspectiveOrgId)) || null;
+  const isPartnerView = !!perspectiveOrg && perspectiveOrg.id !== leadOrg.id;
+  const org = perspectiveOrg ?? leadOrg;
+
+  // Build "collaborating with" list from the active perspective:
+  // include all partner orgs + lead org, minus the org being viewed.
+  const collaboratorIds = Array.from(
+    new Set<string>([
+      project.orgId,
+      ...(project.partnerOrgIds ?? []),
+    ]),
+  ).filter((id) => id !== org.id);
 
   const submission = deriveSubmission(project)!;
   const action = actionFor(role, project, org.name);
