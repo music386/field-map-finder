@@ -113,6 +113,15 @@ function HomePage() {
               NGO
             </span>
           </div>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setPartnershipsOpen(true)}
+            className="gap-1.5 border-[hsl(212_85%_48%)]/40 text-[hsl(212_85%_48%)] hover:bg-[hsl(212_85%_48%)]/10 hover:text-[hsl(212_85%_48%)]"
+          >
+            <Handshake className="h-3.5 w-3.5" />
+            Recent partnerships
+          </Button>
           <RoleSwitcher role={role} onChange={setRole} />
         </div>
       </header>
