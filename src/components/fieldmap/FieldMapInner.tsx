@@ -69,13 +69,12 @@ function clusterIcon(cluster: { getAllChildMarkers: () => L.Marker[] }) {
   });
 }
 
-function DetailPane() {
+function MapPanes() {
   const map = useMap();
   useEffect(() => {
-    if (!map.getPane("detail")) {
-      const pane = map.createPane("detail");
-      pane.style.zIndex = "450";
-      pane.style.pointerEvents = "none";
+    if (!map.getPane("countries")) {
+      const pane = map.createPane("countries");
+      pane.style.zIndex = "350";
       pane.style.mixBlendMode = "multiply";
     }
     if (!map.getPane("labels")) {
@@ -156,20 +155,19 @@ export function FieldMapInner({
     const name = (feature?.properties as { name?: string } | undefined)?.name;
     const c = (name && countryCounts[name]) || 0;
     if (!c) {
-      // Neutral land fill so highlighted countries don't look like overlays
       return {
-        fillColor: "hsl(40 20% 92%)",
-        fillOpacity: 1,
-        color: "hsl(40 10% 75%)",
-        weight: 0.5,
+        fillColor: "hsl(45 18% 88%)",
+        fillOpacity: 0,
+        color: "hsl(45 10% 72%)",
+        weight: 0.45,
       };
     }
     const t = c / maxCount;
-    const lightness = 72 - t * 32; // 72% -> 40%
+    const lightness = 74 - t * 30; // 74% -> 44%
     return {
       fillColor: `hsl(152 65% ${lightness}%)`,
-      fillOpacity: 1,
-      color: "hsl(152 65% 25%)",
+      fillOpacity: 0.88,
+      color: "hsl(152 55% 30%)",
       weight: 0.8,
     };
   }
@@ -184,11 +182,10 @@ export function FieldMapInner({
       style={{ background: "hsl(205 60% 88%)" }}
       scrollWheelZoom
     >
-      <DetailPane />
+      <MapPanes />
       <TileLayer
-        pane="detail"
         attribution='&copy; OpenStreetMap &copy; CARTO'
-        url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
+        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png"
       />
       <TileLayer
         pane="labels"
@@ -199,6 +196,7 @@ export function FieldMapInner({
 
       {countries && (
         <GeoJSON
+          pane="countries"
           key={Object.entries(countryCounts)
             .map(([k, v]) => `${k}:${v}`)
             .join("|")}
