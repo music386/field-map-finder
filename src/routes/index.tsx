@@ -8,6 +8,7 @@ import {
 } from "@/components/fieldmap/Filters";
 import { ProjectCard } from "@/components/fieldmap/ProjectCard";
 import { OrgPanel } from "@/components/fieldmap/OrgPanel";
+import { DonorsGrid } from "@/components/fieldmap/DonorsGrid";
 import { RoleSwitcher, type Role } from "@/components/fieldmap/RoleSwitcher";
 import { projects as allProjects, type Project, orgById, orgKind } from "@/lib/fieldmap-data";
 import logo from "@/assets/fieldmap-logo.png";
