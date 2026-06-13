@@ -1057,7 +1057,101 @@ export const projects: Project[] = [
     },
     status: "seeking support",
   },
+  {
+    id: "p-ngo-1",
+    orgId: "org-ngo-1",
+    title: "Mobile maternal health clinic",
+    category: "healthcare",
+    type: "ongoing",
+    locationLabel: "Eastleigh, Nairobi, Kenya",
+    lat: -1.276,
+    lng: 36.852,
+    description:
+      "A weekly mobile clinic serving urban refugee mothers in Eastleigh, co-staffed with local refugee-led health volunteers.",
+    beneficiaries: "500–2,000",
+    needs: {
+      funding: { amount: 22000, currency: "USD", raised: 9500 },
+      partnership: true,
+    },
+    status: "partially supported",
+  },
+  {
+    id: "p-ngo-2",
+    orgId: "org-ngo-2",
+    title: "Winter shelter kits for new arrivals",
+    category: "shelter",
+    type: "time-bound",
+    targetDate: "2026-12-15",
+    locationLabel: "Mavrovouni site, Lesvos, Greece",
+    lat: 39.11,
+    lng: 26.56,
+    description:
+      "Procurement and distribution of 400 winter kits (blankets, thermal mats, heaters) ahead of the cold season.",
+    beneficiaries: "500–2,000",
+    needs: {
+      funding: { amount: 18000, currency: "EUR", raised: 4200 },
+      equipment: "Thermal blankets, portable heaters",
+    },
+    status: "seeking support",
+  },
+  {
+    id: "p-ngo-3",
+    orgId: "org-ngo-3",
+    title: "Urban integration case management",
+    category: "legal aid",
+    type: "ongoing",
+    locationLabel: "Kennedy, Bogotá, Colombia",
+    lat: 4.629,
+    lng: -74.155,
+    description:
+      "Caseworkers help Venezuelan families regularise status and access health, schooling and housing in Bogotá.",
+    beneficiaries: "2,000+",
+    needs: {
+      funding: { amount: 30000, currency: "USD", raised: 21000 },
+      expertise: ["legal"],
+    },
+    status: "partially supported",
+  },
+  {
+    id: "p-ngo-4",
+    orgId: "org-ngo-4",
+    title: "Primary healthcare clinic, Mafraq",
+    category: "healthcare",
+    type: "ongoing",
+    locationLabel: "Mafraq, Jordan",
+    lat: 32.343,
+    lng: 36.208,
+    description:
+      "Daily primary care services for Syrian refugees and host community, with referrals into the Jordanian system.",
+    beneficiaries: "2,000+",
+    needs: {
+      funding: { amount: 45000, currency: "USD", raised: 12000 },
+      expertise: ["medical"],
+      partnership: true,
+    },
+    status: "partially supported",
+  },
+  {
+    id: "p-ngo-5",
+    orgId: "org-ngo-5",
+    title: "Learning centres in Camp 4",
+    category: "education",
+    type: "time-bound",
+    targetDate: "2027-06-30",
+    locationLabel: "Camp 4, Cox's Bazar, Bangladesh",
+    lat: 21.21,
+    lng: 92.16,
+    description:
+      "Operating 6 learning centres co-run with Rohingya teaching circles, serving 1,200 children with daily classes.",
+    beneficiaries: "500–2,000",
+    needs: {
+      funding: { amount: 27000, currency: "USD", raised: 8000 },
+      training: "Teacher training for 24 volunteer instructors",
+    },
+    status: "seeking support",
+  },
 ];
+
 
 export const categories: Category[] = [
   "energy",
