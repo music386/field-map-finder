@@ -563,6 +563,7 @@ export const projects: Project[] = [
       partnership: true,
     },
     status: "partially supported",
+    partnerOrgIds: ["org-ngo-1"],
   },
   {
     id: "p-3",
