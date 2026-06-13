@@ -472,13 +472,20 @@ function OrgOverview({
               Click an initiative to see full details and manage it.
             </p>
           </div>
-          <Badge variant="secondary" className="text-[10px]">
-            {initiatives.length} total
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="secondary" className="text-[10px]">
+              {initiatives.length} total
+            </Badge>
+            <NewProjectDialog
+              userId={userId}
+              orgId={org?.id ?? null}
+              onCreated={onChanged}
+            />
+          </div>
         </div>
         {initiatives.length === 0 ? (
           <Card className="p-6 text-sm text-muted-foreground">
-            No initiatives yet.
+            No initiatives yet. Click <span className="font-medium">Add initiative</span> above to create your first one.
           </Card>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
