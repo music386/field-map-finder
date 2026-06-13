@@ -101,6 +101,61 @@ export function FieldMapInner({
   focused: Project | null;
 }) {
   const center = useMemo<[number, number]>(() => [10, 25], []);
+
+  const countryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const p of projects) {
+      const org = orgById(p.orgId);
+      if (!org) continue;
+      // Normalize a few country aliases to match the GeoJSON `name` field.
+      const name = org.country === "Türkiye" ? "Turkey" : org.country;
+      counts[name] = (counts[name] ?? 0) + 1;
+    }
+    return counts;
+  }, [projects]);
+
+  const maxCount = Math.max(1, ...Object.values(countryCounts));
+
+  const [countries, setCountries] =
+    useState<FeatureCollection<Geometry> | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(
+      "https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json",
+    )
+      .then((r) => r.json())
+      .then((data: FeatureCollection<Geometry>) => {
+        if (!cancelled) setCountries(data);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function styleFor(feature?: Feature<Geometry>) {
+    const name = (feature?.properties as { name?: string } | undefined)?.name;
+    const c = (name && countryCounts[name]) || 0;
+    if (!c) {
+      return {
+        fillColor: "transparent",
+        fillOpacity: 0,
+        color: "transparent",
+        weight: 0,
+      };
+    }
+    // Green ramp keyed to relative count
+    const t = c / maxCount;
+    const lightness = 78 - t * 32; // 78% -> 46%
+    return {
+      fillColor: `hsl(152 65% ${lightness}%)`,
+      fillOpacity: 0.45,
+      color: "hsl(152 65% 30%)",
+      weight: 1,
+    };
+  }
+
   return (
     <MapContainer
       center={center}
@@ -114,6 +169,26 @@ export function FieldMapInner({
         attribution='&copy; OpenStreetMap &copy; CARTO'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
+      {countries && (
+        <GeoJSON
+          key={Object.entries(countryCounts)
+            .map(([k, v]) => `${k}:${v}`)
+            .join("|")}
+          data={countries}
+          style={styleFor as L.StyleFunction}
+          onEachFeature={(feature, layer) => {
+            const name = (feature.properties as { name?: string } | undefined)
+              ?.name;
+            const c = (name && countryCounts[name]) || 0;
+            if (c > 0) {
+              layer.bindTooltip(
+                `${name}: ${c} initiative${c === 1 ? "" : "s"}`,
+                { sticky: true },
+              );
+            }
+          }}
+        />
+      )}
       <MarkerClusterGroup
         chunkedLoading
         iconCreateFunction={clusterIcon}
