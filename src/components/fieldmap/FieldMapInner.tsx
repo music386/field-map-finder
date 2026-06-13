@@ -20,25 +20,36 @@ const PIN_COLORS: Record<EntityKind, string> = {
   NGO: "hsl(212 85% 48%)",
 };
 
-function makePinIcon(kind: EntityKind, partner = false) {
-  const color = PIN_COLORS[kind];
-  const ring = partner
-    ? "0 0 0 2px #fff,0 0 0 4px " + color + ",0 1px 3px rgba(0,0,0,0.3)"
-    : "0 0 0 2px #fff,0 1px 3px rgba(0,0,0,0.3)";
-  return L.divIcon({
-    className: `fieldmap-pin fieldmap-pin-${kind}`,
-    html: `<span style="display:block;height:14px;width:14px;border-radius:9999px;background:${color};box-shadow:${ring}"></span>`,
-    iconSize: [14, 14],
-    iconAnchor: [7, 7],
-  });
-}
-
-const icons = {
-  RLO: makePinIcon("RLO"),
-  NGO: makePinIcon("NGO"),
-  "RLO-partner": makePinIcon("RLO", true),
-  "NGO-partner": makePinIcon("NGO", true),
+type PinIconOptions = {
+  partner?: boolean;
+  selected?: boolean;
 };
+
+const pinIconCache = new Map<string, L.DivIcon>();
+
+function getPinIcon(kind: EntityKind, options: PinIconOptions = {}) {
+  const { partner = false, selected = false } = options;
+  const key = `${kind}-${partner ? "partner" : "main"}-${selected ? "selected" : "idle"}`;
+  const cached = pinIconCache.get(key);
+  if (cached) return cached;
+
+  const color = PIN_COLORS[kind];
+  const icon = L.divIcon({
+    className: `fieldmap-pin fieldmap-pin-${kind}${partner ? " is-partner" : ""}${selected ? " is-selected" : ""}`,
+    html: `
+      <span style="position:relative;display:block;height:30px;width:30px;">
+        ${selected ? '<span style="position:absolute;inset:1px;border-radius:9999px;border:2px solid rgba(15,23,42,0.88);box-shadow:0 0 0 1px rgba(255,255,255,0.96);"></span>' : ""}
+        ${partner ? `<span style="position:absolute;inset:5px;border-radius:9999px;border:2px solid ${color};"></span>` : ""}
+        <span style="position:absolute;top:8px;left:8px;height:14px;width:14px;border-radius:9999px;background:${color};box-shadow:0 0 0 2px #fff,0 1px 3px rgba(0,0,0,0.3);"></span>
+      </span>
+    `,
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
+  });
+
+  pinIconCache.set(key, icon);
+  return icon;
+}
 
 function clusterIcon(cluster: { getAllChildMarkers: () => L.Marker[] }) {
   const markers = cluster.getAllChildMarkers();
@@ -156,6 +167,8 @@ export function FieldMapInner({
         {projects.flatMap((p) => {
           const org = orgById(p.orgId);
           const kind = orgKind(org);
+          const mainSelected =
+            focused?.project.id === p.id && !focused.perspectiveOrgId;
           const partnerOrgs = (p.partnerOrgIds ?? [])
             .map((id) => orgById(id))
             .filter((o): o is NonNullable<typeof o> => !!o);
@@ -167,7 +180,8 @@ export function FieldMapInner({
             <Marker
               key={p.id}
               position={[p.lat, p.lng]}
-              icon={icons[kind]}
+              icon={getPinIcon(kind, { selected: mainSelected })}
+              zIndexOffset={mainSelected ? 1000 : 0}
               eventHandlers={{ click: () => onSelect(p) }}
             >
               <Popup>
@@ -185,11 +199,17 @@ export function FieldMapInner({
           const partnerPins = partnerOrgs.map((po, i) => {
             const pKind = orgKind(po);
             const [dlat, dlng] = offsetFor(p.id + po.id, i);
+            const partnerSelected =
+              focused?.project.id === p.id && focused.perspectiveOrgId === po.id;
             return (
               <Marker
                 key={`${p.id}-partner-${po.id}`}
                 position={[p.lat + dlat, p.lng + dlng]}
-                icon={icons[`${pKind}-partner` as const]}
+                icon={getPinIcon(pKind, {
+                  partner: true,
+                  selected: partnerSelected,
+                })}
+                zIndexOffset={partnerSelected ? 1000 : 0}
                 eventHandlers={{ click: () => onSelect(p, po.id) }}
               >
                 <Popup>
