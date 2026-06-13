@@ -1,13 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
 import { orgById, projectsByOrg, type Project } from "@/lib/fieldmap-data";
 import { orgColor, orgInitials } from "@/lib/category-photos";
+import { SidePanel } from "./SidePanel";
 
 export function OrgPanel({
   orgId,
@@ -26,83 +21,79 @@ export function OrgPanel({
   const orgProjects = projectsByOrg(orgId);
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full overflow-y-auto sm:max-w-md">
-        <SheetHeader className="space-y-3">
-          <div className="flex items-center gap-3">
-            <div
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-base font-semibold text-white"
-              style={{ backgroundColor: orgColor(org.id) }}
-            >
-              {orgInitials(org.name)}
-            </div>
-            <div className="min-w-0">
-              <Badge variant="outline" className="capitalize">
-                {org.orgType}
-              </Badge>
-              <SheetTitle className="mt-1 text-xl leading-snug">
-                {org.name}
-              </SheetTitle>
-              <p className="text-xs text-muted-foreground">
-                {org.region}, {org.country}
-                {org.yearFounded ? ` · est. ${org.yearFounded}` : ""}
-              </p>
-            </div>
+    <SidePanel open={open} onClose={() => onOpenChange(false)}>
+      <div className="space-y-5 p-4 pt-5">
+        <div className="flex items-center gap-3 pr-8">
+          <div
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-base font-semibold text-white"
+            style={{ backgroundColor: orgColor(org.id) }}
+          >
+            {orgInitials(org.name)}
           </div>
-        </SheetHeader>
-
-        <div className="space-y-5 px-4 pb-6">
-          {org.description && (
-            <p className="text-sm leading-relaxed">{org.description}</p>
-          )}
-
-          <section className="space-y-2">
-            <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              What this RLO brings
-            </h4>
-            <div className="flex flex-wrap gap-1.5">
-              {org.brings.map((b) => (
-                <Badge key={b} variant="outline" className="capitalize">
-                  {b}
-                </Badge>
-              ))}
-            </div>
-          </section>
-
-          <Separator />
-
-          <section className="space-y-2">
-            <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Projects ({orgProjects.length})
-            </h4>
-            <ul className="space-y-2">
-              {orgProjects.map((p) => (
-                <li key={p.id}>
-                  <button
-                    onClick={() => onProjectClick(p)}
-                    className="block w-full rounded-md border bg-card p-3 text-left transition-colors hover:bg-accent"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <span className="text-sm font-medium leading-snug">
-                        {p.title}
-                      </span>
-                      <Badge
-                        variant="secondary"
-                        className="shrink-0 text-[10px] capitalize"
-                      >
-                        {p.category}
-                      </Badge>
-                    </div>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {p.locationLabel}
-                    </p>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </section>
+          <div className="min-w-0">
+            <Badge variant="outline" className="capitalize">
+              {org.orgType}
+            </Badge>
+            <h2 className="mt-1 text-xl font-semibold leading-snug">
+              {org.name}
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              {org.region}, {org.country}
+              {org.yearFounded ? ` · est. ${org.yearFounded}` : ""}
+            </p>
+          </div>
         </div>
-      </SheetContent>
-    </Sheet>
+
+        {org.description && (
+          <p className="text-sm leading-relaxed">{org.description}</p>
+        )}
+
+        <section className="space-y-2">
+          <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            What this RLO brings
+          </h4>
+          <div className="flex flex-wrap gap-1.5">
+            {org.brings.map((b) => (
+              <Badge key={b} variant="outline" className="capitalize">
+                {b}
+              </Badge>
+            ))}
+          </div>
+        </section>
+
+        <Separator />
+
+        <section className="space-y-2">
+          <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Initiatives ({orgProjects.length})
+          </h4>
+          <ul className="space-y-2">
+            {orgProjects.map((p) => (
+              <li key={p.id}>
+                <button
+                  onClick={() => onProjectClick(p)}
+                  className="block w-full rounded-md border bg-card p-3 text-left transition-colors hover:bg-accent"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="text-sm font-medium leading-snug">
+                      {p.title}
+                    </span>
+                    <Badge
+                      variant="secondary"
+                      className="shrink-0 text-[10px] capitalize"
+                    >
+                      {p.category}
+                    </Badge>
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {p.locationLabel}
+                  </p>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
+    </SidePanel>
   );
 }

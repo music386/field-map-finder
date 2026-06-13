@@ -1,15 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
 import { orgById, type Project } from "@/lib/fieldmap-data";
 import { categoryPhotos, orgColor, orgInitials } from "@/lib/category-photos";
 import { deriveSubmission } from "@/lib/submissions";
+import { SidePanel } from "./SidePanel";
 import type { Role } from "./RoleSwitcher";
 import { MessageSquare } from "lucide-react";
 
@@ -93,9 +88,10 @@ export function ProjectCard({
   );
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full overflow-y-auto p-0 sm:max-w-md">
+    <SidePanel open={open} onClose={() => onOpenChange(false)}>
+      <div className="w-full">
         <div className="relative h-48 w-full bg-muted">
+
           <img
             src={photo}
             alt={`${project.category} initiative`}
@@ -139,11 +135,12 @@ export function ProjectCard({
           </div>
         </div>
 
-        <SheetHeader className="px-4 pb-2 pt-4 text-left">
-          <SheetTitle className="text-xl leading-snug">
+        <div className="px-4 pb-2 pt-4">
+          <h2 className="text-xl font-semibold leading-snug">
             {submission.title}
-          </SheetTitle>
-        </SheetHeader>
+          </h2>
+        </div>
+
 
         <div className="space-y-5 px-4 pb-6">
           <Field label="Location">{submission.location}</Field>
@@ -242,7 +239,7 @@ export function ProjectCard({
             </p>
           </div>
         </div>
-      </SheetContent>
-    </Sheet>
+      </div>
+    </SidePanel>
   );
 }

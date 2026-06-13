@@ -98,27 +98,26 @@ function HomePage() {
         resultCount={visible.length}
       />
 
-      <div className="relative flex-1">
+      <div className="relative flex-1 overflow-hidden">
         <FieldMap
           projects={visible}
           onSelect={openProject}
           focused={projectOpen ? selected : null}
         />
+        <ProjectCard
+          project={selected}
+          open={projectOpen}
+          onOpenChange={setProjectOpen}
+          role={role}
+          onOrgClick={openOrg}
+        />
+        <OrgPanel
+          orgId={orgId}
+          open={orgOpen}
+          onOpenChange={setOrgOpen}
+          onProjectClick={openProject}
+        />
       </div>
-
-      <ProjectCard
-        project={selected}
-        open={projectOpen}
-        onOpenChange={setProjectOpen}
-        role={role}
-        onOrgClick={openOrg}
-      />
-      <OrgPanel
-        orgId={orgId}
-        open={orgOpen}
-        onOpenChange={setOrgOpen}
-        onProjectClick={openProject}
-      />
     </div>
   );
 }
