@@ -76,7 +76,7 @@ export function Filters({
       <Popover>
         <PopoverTrigger asChild>
           <Button variant="outline" size="sm" className="h-8 text-xs">
-            What they need
+            Resource Needs
             {value.needs.length > 0 && (
               <Badge variant="secondary" className="ml-2 h-4 px-1 text-[10px]">
                 {value.needs.length}
@@ -116,13 +116,14 @@ export function Filters({
           onChange({ ...value, type: v as FilterState["type"] })
         }
       >
-        <SelectTrigger className="h-8 w-[180px] text-xs">
-          <SelectValue />
+        <SelectTrigger className="h-8 w-[150px] text-xs">
+          <span className="text-muted-foreground mr-1">Type:</span>
+          <SelectValue placeholder="Both" />
         </SelectTrigger>
         <SelectContent className="z-[2000]">
-          <SelectItem value="both">Type: project & mission</SelectItem>
-          <SelectItem value="time-bound">Type: project only</SelectItem>
-          <SelectItem value="ongoing">Type: mission only</SelectItem>
+          <SelectItem value="both">Both</SelectItem>
+          <SelectItem value="time-bound">Project</SelectItem>
+          <SelectItem value="ongoing">Mission</SelectItem>
         </SelectContent>
       </Select>
 
