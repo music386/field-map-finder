@@ -143,7 +143,7 @@ function HomePage() {
             <FieldMap
               projects={visible}
               onSelect={openProject}
-              focused={projectOpen ? selected : null}
+              focused={projectOpen && selected ? { project: selected, perspectiveOrgId } : null}
             />
             <ProjectCard
               project={selected}
