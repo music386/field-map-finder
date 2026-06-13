@@ -145,5 +145,3 @@ export async function logSmsOutreach(args: {
   });
 }
 
-// keep Input import used
-void Input;
