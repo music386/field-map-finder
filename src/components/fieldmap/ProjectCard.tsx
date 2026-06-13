@@ -187,6 +187,11 @@ export function ProjectCard({
           <p className="text-[11px] text-muted-foreground">
             Opens your SMS app. The RLO will reply to your number directly.
           </p>
+          {isPartnerView && (
+            <p className="mt-1 text-[11px] font-medium text-[hsl(212_85%_48%)]">
+              You're viewing {org.name}'s role in this initiative.
+            </p>
+          )}
         </div>
 
 
